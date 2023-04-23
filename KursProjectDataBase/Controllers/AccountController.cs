@@ -55,8 +55,6 @@ namespace KursProjectDataBase.Controllers
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
                     new ClaimsPrincipal(result.Data!));
-                
-                
 
                 return RedirectToAction("Test", "Home");
             }

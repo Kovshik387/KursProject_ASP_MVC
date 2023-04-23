@@ -27,13 +27,11 @@ namespace KursProjectDataBase.Controllers
         }
 
         [Authorize (Roles ="Пользователь")]
-        public async Task<IActionResult> Test()
+        public  IActionResult Test()
         {
-            var authorization = await _dataBaseModelContext.Authorizations.FirstOrDefaultAsync(item => item.Loginuser == HttpContext.User.Identity!.Name);
-
-            
-
-            return View(await _dataBaseModelContext.Users.FirstOrDefaultAsync(item => authorization!.IdU == item.IdU));
+            string temp = HttpContext.User.Identity.Name;
+            _logger.LogWarning(temp);
+            return View( _dataBaseModelContext.Users.FirstOrDefault(item => Convert.ToInt32(temp) == item.IdU));
         }
         
     }

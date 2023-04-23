@@ -121,7 +121,7 @@ namespace KursProjectDataBase.Services
                     };
                 }
 
-                var result = Authenticate(authorization);
+                var result = Authenticate(check);
                 return new BaseResponse<ClaimsIdentity>()
                 {
                     Data = result,
@@ -143,9 +143,10 @@ namespace KursProjectDataBase.Services
 
         private ClaimsIdentity Authenticate(Authorization user)
         {
+            string userId = user.IdU.ToString()!;
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Loginuser),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userId),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, "Пользователь"),
             };
             return new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
