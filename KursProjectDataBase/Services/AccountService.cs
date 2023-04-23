@@ -1,8 +1,13 @@
 ﻿using DataBaseModel;
 using DataBaseModel.Entity;
+using DataBaseModel.Response;
 using KursProjectDataBase.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KursProjectDataBase.Services
 {
@@ -10,7 +15,6 @@ namespace KursProjectDataBase.Services
 
     public class AccountService
     {
-        //private readonly ILogger<AccountService> _logger;
         private readonly KursProjectDataBaseContext _dataBaseModelContext;
 
         private enum Role
@@ -24,7 +28,7 @@ namespace KursProjectDataBase.Services
             _dataBaseModelContext = dataBaseModelContext;
         }
 
-        public Task<ClaimsIdentity> Register(TemporalEntity model)
+        public BaseResponse<ClaimsIdentity> Register(TemporalEntity model)
         {
             try
             {
@@ -32,7 +36,10 @@ namespace KursProjectDataBase.Services
                     x.Loginuser == model.Loginuser);
                 if (check != null)
                 {
-                    return Task.FromResult(new ClaimsIdentity());
+                    return new BaseResponse<ClaimsIdentity>()
+                    {
+                        Description = "Пользователь с таким именем уже есть",
+                    };
                 }
 
                 var user = new User()
@@ -52,9 +59,9 @@ namespace KursProjectDataBase.Services
                     IdType = 1,
                     Passworduser = model.Passworduser,
                     IdU = user.IdU,
-                    
+
                 };
-                
+
 
                 _dataBaseModelContext.Authorizations.Add(authorization);
 
@@ -64,7 +71,7 @@ namespace KursProjectDataBase.Services
                     var type = new Tenant()
                     {
                         IdU = user.IdU,
-                        Rating = 5
+                        Rating = default(int),
                     };
                     _dataBaseModelContext.Tenants.Add(type);
                 }
@@ -81,42 +88,67 @@ namespace KursProjectDataBase.Services
                 _dataBaseModelContext.SaveChanges();
 
                 var result = Authenticate(authorization);
-                result.Label = user.IdU.ToString();
-                return Task.FromResult(new ClaimsIdentity());
+                //result.Label = user.IdU.ToString();
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    Data = result,
+                    Description = "Объект добавлен",
+                    StatusCode = DataBaseModel.Enum.StatusCode.OK
+                };
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    Description = ex.Message,
+                    StatusCode = DataBaseModel.Enum.StatusCode.InternalServerError,
+                };
             }
-            return Task.FromResult(new ClaimsIdentity());
         }
 
-        public bool Login(Authorization authorization)
+        public BaseResponse<ClaimsIdentity> Login(Authorization authorization)
         {
             try
             {
                 var check = _dataBaseModelContext.Authorizations.FirstOrDefault(x =>
                     x.Loginuser == authorization.Loginuser && x.Passworduser == authorization.Passworduser);
-                if (check != null)
+                if (check == null)
                 {
-                    var result = Authenticate(authorization);
-                    return true;
+                    return new BaseResponse<ClaimsIdentity>()
+                    {
+                        Description = "Неверное имя пользователя или пароль"
+                    };
                 }
+
+                var result = Authenticate(authorization);
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    Data = result,
+                    StatusCode = DataBaseModel.Enum.StatusCode.OK,
+                };
             }
-            catch (Exception) { }
-            return false;
+            catch (Exception ex) 
+            {
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    StatusCode = DataBaseModel.Enum.StatusCode.UserNotFound,
+                    Description = ex.Message
+                };
+            }
+            
         }
+
+
 
         private ClaimsIdentity Authenticate(Authorization user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Loginuser),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, "Пользователь"),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, "Пользователь"),
             };
-            return new ClaimsIdentity(claims, "ApplicationCookie",
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType); 
+            return new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }
 }

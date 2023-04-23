@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataBaseModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KursProjectDataBase.Controllers
 {
@@ -25,9 +26,14 @@ namespace KursProjectDataBase.Controllers
             return View();
         }
 
-        public IActionResult Test()
+        [Authorize (Roles ="Пользователь")]
+        public async Task<IActionResult> Test()
         {
-            return View();
+            var authorization = await _dataBaseModelContext.Authorizations.FirstOrDefaultAsync(item => item.Loginuser == HttpContext.User.Identity!.Name);
+
+            
+
+            return View(await _dataBaseModelContext.Users.FirstOrDefaultAsync(item => authorization!.IdU == item.IdU));
         }
         
     }
