@@ -19,7 +19,7 @@ public partial class User
 
     public string? Contact { get; set; }
 
-    public virtual ICollection<Authorization>? Authorizations { get; set; } = new List<Authorization>();
+    public virtual ICollection<Authorization> Authorizations { get; set; } = new List<Authorization>();
 
     public virtual ICollection<Renter>? Renters { get; set; } = new List<Renter>();
 

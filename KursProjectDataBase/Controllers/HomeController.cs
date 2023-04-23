@@ -14,6 +14,7 @@ namespace KursProjectDataBase.Controllers
             _logger = logger;
             _dataBaseModelContext = context; 
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _dataBaseModelContext.Users.ToListAsync());

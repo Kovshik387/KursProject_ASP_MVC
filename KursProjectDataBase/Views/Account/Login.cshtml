@@ -1,0 +1,30 @@
+﻿@model DataBaseModel.Entity.Authorization
+
+<form method="post">
+    <fieldset>
+        <legend>Авторизация</legend>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="login">Логин</label>
+            <div class="col-md-4">
+                <input class="form-control input-md" asp-for="Loginuser" class="form-control" type="text" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="password">Пароль</label>
+            <div class="col-md-4">
+                <input class="form-control input-md" asp-for="Passworduser" class="form-control" type="text" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="singlebutton"></label>
+            <div class="col-md-4">
+                @*<button id="singlebutton" name="singlebutton" class="btn btn-primary" ,type="submit",value="Save">зарегистрироваться</button>*@
+                <input type="submit" value="Save" />
+            </div>
+        </div>
+
+    </fieldset>
+</form>

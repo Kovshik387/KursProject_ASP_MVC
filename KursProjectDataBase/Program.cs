@@ -7,6 +7,8 @@ string? connection = builder.Configuration.GetConnectionString("DefaultConnectio
 // Add services to the container.
 builder.Services.AddDbContext<DataBaseModel.KursProjectDataBaseContext>(options => options.UseNpgsql(connection));
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication("Cookies").AddCookie();
+builder.Services.AddAuthentication();
 
 var app = builder.Build();
 
@@ -18,12 +20,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
