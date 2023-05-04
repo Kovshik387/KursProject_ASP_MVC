@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using System.Security.Claims;
 
 namespace KursProjectDataBase.Controllers
@@ -78,6 +79,7 @@ namespace KursProjectDataBase.Controllers
             _logger.LogWarning(temp.ToString());
 
             var user = _dataBaseModelContext.Users.Include(u => u.Tenants).Include(u0=> u0.Renters).FirstOrDefault(u => u.IdU == temp);
+            
             var auth = _dataBaseModelContext.Authorizations.Where(a => a.IdU == temp).ToList();
             var contract = _dataBaseModelContext.Contracts.
                 Include(s => s.IdSNavigation).
@@ -90,5 +92,51 @@ namespace KursProjectDataBase.Controllers
 
             return View(tuple);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Tenant, Renter")]
+        public IActionResult Info(UserView user) => RedirectToAction("Change", "Account");
+
+        [HttpGet]
+        [Authorize(Roles = "Tenant, Renter")]
+        public IActionResult Change()
+        {
+            int temp = int.Parse(HttpContext.User.Identity!.Name!);
+            var temporalUser = _dataBaseModelContext.Users.Include(u => u.Tenants).Include(u0 => u0.Renters).FirstOrDefault(u => u.IdU == temp);
+            var auth = _dataBaseModelContext.Authorizations.Where(a => a.IdU == temp).First();
+            var user = new UserView
+            {
+                Loginuser = auth.Loginuser,
+                Passworduser = auth.Passworduser,
+
+                Name = temporalUser!.Name,
+                Surname = temporalUser.Surname,
+                Sex = temporalUser.Sex,
+                Contact = temporalUser.Contact
+            };
+
+            if (HttpContext.User.FindFirst("role")!.Value == "Tenant")
+            {
+                user.Rating = _dataBaseModelContext.Tenants.Where(t => t.IdU == temp).First().Rating;
+            }
+            else
+            {
+                user.License = _dataBaseModelContext.Renters.Where(r => r.IdU == temp).First().License;
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Tenant, Renter")]
+        public IActionResult Change(UserView user)
+        {
+            _accountService.Update(user,this.HttpContext.User.Identity!.Name!);
+
+            return RedirectToAction("Info", "Account");
+        }
+
+
+        
     }
 }

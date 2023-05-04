@@ -26,11 +26,22 @@
     <p>Пароль: @authorize.Passworduser</p>
 </div>
 
+<di>
+    <form method="post">
+        <div class="">
+            <label class="col-md-4 control-label" for="singlebutton"></label>
+            <div class="col-md-4">
+                <input type="submit" value="Изменить данные" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</di>
+
 <p style="margin-right: 0em">
 @if (Model.Item3.Count != 0)
 {
+        <header>Контракты</header>
         <table class="table table-bordered">
-            <caption>Пользователи</caption>
             <thead>
                 <tr>
                 @if(who)

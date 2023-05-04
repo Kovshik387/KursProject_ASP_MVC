@@ -1,0 +1,55 @@
+﻿@model DataBaseModel.ViewEntity.UserView
+@{
+    bool who = this.Context.User.FindFirst("role")!.Value == "Tenant";
+}
+
+<div>
+    <form method="post">
+        <fieldset>
+
+            <h1>Страница пользователя</h1>
+
+            <p>Имя: @Model.Name</p>
+            <p>Фамилия: @Model.Surname</p>
+            <p>Пол: @Model.Sex</p>
+
+            @if (who)
+            {
+                <p>Роль: Съёмщик</p>
+                <p>Рэйтинг: @Model.Rating</p>
+            }
+            else
+            {
+                <p>Роль: Арендодатель</p>
+                <p>Лицензия: @Model.License</p>
+            }
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Loginuser" class="form-control" type="text" value="@Model.Loginuser"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Passworduser" class="form-control" type="text" value="@Model.Passworduser" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Contact" class="form-control" type="text" value="@Model.Contact" />
+                </div>
+            </div>
+
+
+        <div class="">
+            <label class="col-md-4 control-label" for="singlebutton"></label>
+            <div class="col-md-4">
+                <input type="submit" value="Изменить данные" class="btn btn-primary" />
+            </div>
+        </div>
+        </fieldset>
+    </form>
+</div>
+

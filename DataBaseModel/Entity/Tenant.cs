@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace DataBaseModel.Entity;
 [EntityTypeConfiguration(typeof(TenantConfiguration))]
-public partial class Tenant
+public partial class Tenant : IEntityType
 {
     [Key]
     public int IdT { get; set; }

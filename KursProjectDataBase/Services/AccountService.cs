@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using DataBaseModel.ViewEntity;
+using System.Runtime.CompilerServices;
 
 namespace KursProjectDataBase.Services
 {
@@ -102,6 +103,28 @@ namespace KursProjectDataBase.Services
                     StatusCode = DataBaseModel.Enum.StatusCode.InternalServerError,
                 };
             }
+        }
+
+        public BaseResponse<String> Update(UserView user, string _id)
+        {
+            int id = int.Parse(_id);
+
+            this._dataBaseModelContext.Authorizations.Where(a => a.IdU == id).ExecuteUpdate(p => p.
+                SetProperty(l => l.Loginuser, l => user.Loginuser).
+                SetProperty(l => l.Passworduser, l=> user.Passworduser)
+            );
+
+            this._dataBaseModelContext.Users.Where(u => u.IdU == id).ExecuteUpdate(u => 
+                u.SetProperty(c => c.Contact, c => user.Contact)
+            );
+            
+            return new BaseResponse<String>
+            {
+                Data = null,
+                StatusCode = DataBaseModel.Enum.StatusCode.OK,
+                Description = "Успешно"
+            };
+
         }
 
         public BaseResponse<ClaimsIdentity> Login(Authorization authorization)

@@ -7,7 +7,7 @@ namespace DataBaseModel.Entity;
 
 
 [EntityTypeConfiguration(typeof(RenterConfiguration))]
-public partial class Renter
+public partial class Renter : IEntityType
 {
     [Key]
     public int IdR { get; set; }

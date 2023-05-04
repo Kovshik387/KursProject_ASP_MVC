@@ -20,6 +20,10 @@ namespace DataBaseModel.ViewEntity
         public string Loginuser { get; set; } = null!;
 
         public string Passworduser { get; set; } = null!;
+        
+        public int? Rating { get; set; }
+
+        public int? License { get; set; }
 
         public int TypeUser { get; set; }
 

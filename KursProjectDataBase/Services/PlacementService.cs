@@ -8,7 +8,6 @@ namespace KursProjectDataBase.Services
     public class PlacementService
     {
         private readonly KursProjectDataBaseContext _dataBaseModelContext;
-        private readonly string _id;
 
         public PlacementService(KursProjectDataBaseContext dataBaseModelContext)
         {
