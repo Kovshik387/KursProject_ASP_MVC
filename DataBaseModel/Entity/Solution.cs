@@ -14,7 +14,7 @@ public partial class Solution
 
     public DateOnly Datesolution { get; set; }
 
-    public int IdT { get; set; }
+    public int? IdT { get; set; }
 
     public int IdR { get; set; }
 

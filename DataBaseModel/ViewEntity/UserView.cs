@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataBaseModel
+namespace DataBaseModel.ViewEntity
 {
-    public class TemporalEntity
+    public class UserView
     {
         public string? Name { get; set; }
 

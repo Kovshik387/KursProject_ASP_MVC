@@ -26,10 +26,10 @@ namespace KursProjectDataBase.Controllers
             return View();
         }
 
-        [Authorize (Roles ="Пользователь")]
+        [Authorize]
         public  IActionResult Test()
         {
-            string temp = HttpContext.User.Identity.Name;
+            string temp = HttpContext.User.Identity!.Name!;
             _logger.LogWarning(temp);
             return View( _dataBaseModelContext.Users.FirstOrDefault(item => Convert.ToInt32(temp) == item.IdU));
         }

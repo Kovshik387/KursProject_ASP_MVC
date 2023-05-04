@@ -8,27 +8,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using DataBaseModel.ViewEntity;
 
 namespace KursProjectDataBase.Services
 {
-
-
     public class AccountService
     {
         private readonly KursProjectDataBaseContext _dataBaseModelContext;
 
         private enum Role
         {
-            Tenant = 0,
-            Renter
+            Tenant = 1,
+            Renter = 2
         }
 
         public AccountService(KursProjectDataBaseContext dataBaseModelContext)
         {
             _dataBaseModelContext = dataBaseModelContext;
         }
-
-        public BaseResponse<ClaimsIdentity> Register(TemporalEntity model)
+        public BaseResponse<ClaimsIdentity> Register(UserView model)
         {
             try
             {
@@ -59,23 +57,13 @@ namespace KursProjectDataBase.Services
                     IdType = 1,
                     Passworduser = model.Passworduser,
                     IdU = user.IdU,
-
                 };
-
 
                 _dataBaseModelContext.Authorizations.Add(authorization);
 
+                ClaimsIdentity result;
 
-                if ((Role)model.TypeUser == Role.Tenant)
-                {
-                    var type = new Tenant()
-                    {
-                        IdU = user.IdU,
-                        Rating = default(int),
-                    };
-                    _dataBaseModelContext.Tenants.Add(type);
-                }
-                else
+                if ((Role)model.TypeUser == Role.Renter)
                 {
                     var type = new Renter()
                     {
@@ -83,16 +71,25 @@ namespace KursProjectDataBase.Services
                         License = new Random().Next(0, 1000000000)
                     };
                     _dataBaseModelContext.Renters.Add(type);
+                    result = Authenticate(authorization, Role.Renter);
+                }
+                else
+                {
+                    var type = new Tenant()
+                    {
+                        IdU = user.IdU,
+                        Rating = default(int),
+                    };
+                    _dataBaseModelContext.Tenants.Add(type);
+                    result = Authenticate(authorization,Role.Tenant);
                 }
 
                 _dataBaseModelContext.SaveChanges();
 
-                var result = Authenticate(authorization);
-                //result.Label = user.IdU.ToString();
+
                 return new BaseResponse<ClaimsIdentity>()
                 {
                     Data = result,
-                    Description = "Объект добавлен",
                     StatusCode = DataBaseModel.Enum.StatusCode.OK
                 };
             }
@@ -121,10 +118,12 @@ namespace KursProjectDataBase.Services
                     };
                 }
 
-                var result = Authenticate(check);
+                var role = _dataBaseModelContext.Tenants.Where(u => u.IdU == check.IdU).ToList();
+                ClaimsIdentity result;
+
                 return new BaseResponse<ClaimsIdentity>()
                 {
-                    Data = result,
+                    Data = role.Count == 1 ? result = Authenticate(check, Role.Tenant): result = Authenticate(check, Role.Renter) ,
                     StatusCode = DataBaseModel.Enum.StatusCode.OK,
                 };
             }
@@ -139,16 +138,16 @@ namespace KursProjectDataBase.Services
             
         }
 
-
-
-        private ClaimsIdentity Authenticate(Authorization user)
+        private ClaimsIdentity Authenticate(Authorization user,Role role)
         {
             string userId = user.IdU.ToString()!;
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userId),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, "Пользователь"),
+                new Claim("role", role.ToString()),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()),
             };
+            Console.WriteLine($"{userId} + {role}");
             return new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }

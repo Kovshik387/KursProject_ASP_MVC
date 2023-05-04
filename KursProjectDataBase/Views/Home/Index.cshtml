@@ -1,11 +1,24 @@
 ﻿@model IEnumerable<DataBaseModel.Entity.User>
 
-<div class="text-center">
-    @foreach (var item in Model)
-    {
-        <h1 class="display-4"> @item.Name</h1> <h2 class="display-4">@item.Surname</h2>
-    }
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="nav-item">
+    <table>
+        <caption>Пользователи</caption>
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Surname</td>
+                </tr>
+            }
+        </tbody>
+        
+    </table>
 </div>
 
-@*@section Partial{}*@

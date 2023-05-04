@@ -1,4 +1,4 @@
-﻿@model DataBaseModel.TemporalEntity
+﻿@model DataBaseModel.ViewEntity.UserView
 
 <form method="post">
     <fieldset>
@@ -70,11 +70,10 @@
             </div>
 
             <!-- Button -->
-            <div class="form-group">
+            <div class="">
                 <label class="col-md-4 control-label" for="singlebutton"></label>
                 <div class="col-md-4">
-                    @*<button id="singlebutton" name="singlebutton" class="btn btn-primary" ,type="submit",value="Save">зарегистрироваться</button>*@
-                    <input type="submit" value="Save"/>
+                    <input type="submit" value="Создать" class="btn btn-primary" />
                 </div>
             </div>
         </form>

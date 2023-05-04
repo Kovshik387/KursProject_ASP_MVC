@@ -1,0 +1,75 @@
+﻿@model Tuple<DataBaseModel.Entity.User,List<DataBaseModel.Entity.Authorization>,List<DataBaseModel.Entity.Contract>>
+@{
+    var authorize = Model.Item2.First();
+    bool who = this.Context.User.FindFirst("role")!.Value == "Tenant";
+}
+
+<div class="col-4 gx-4">
+    <h1>Страница пользователя</h1>
+
+    <p>Имя: @Model.Item1.Name</p>
+    <p>Фамилия: @Model.Item1.Surname</p>
+    <p>Пол: @Model.Item1.Sex</p>
+    <p>Контактные данные: @Model.Item1.Contact</p>
+    
+    @if (who)
+    {
+        <p>Роль: Съёмщик</p>
+        <p>Рэйтинг: @Model.Item1.Tenants!.First().Rating</p>
+    }
+    else
+    {
+        <p>Роль: Арендодатель</p>
+        <p>Лицензия: @Model.Item1.Renters!.First().License</p>
+    }
+    <p>Логин: @authorize.Loginuser</p>
+    <p>Пароль: @authorize.Passworduser</p>
+</div>
+
+<p style="margin-right: 0em">
+@if (Model.Item3.Count != 0)
+{
+        <table class="table table-bordered">
+            <caption>Пользователи</caption>
+            <thead>
+                <tr>
+                @if(who)
+                {
+                    <th>Арендодатель</th>
+                }
+                else
+                {
+                    <th>Съёмщик</th>
+                }
+                    <th>Описание сделки</th>
+                    <th>Дата заключения</th>
+                    <th>Оплата</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item3)
+                {
+                <tr>
+                    @if (who)
+                    {
+                        <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Name</td>        
+                    }
+                    else
+                    {
+                        <td>@item.IdSNavigation.IdTNavigation.IdUNavigation.Name</td>
+                    }
+                    <td>@item.IdSNavigation.Description</td>
+                    <td>@item.IdSNavigation.Datesolution</td>
+                    <td>@item.Paymentsize</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+}
+else{
+    <h3>
+        У вас ещё нет сделок
+    </h3>
+}
+</p>
+
