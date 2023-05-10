@@ -5,6 +5,8 @@ using DataBaseModel.ViewEntity;
 using DataBaseModel;
 using KursProjectDataBase.Services;
 using DataBaseModel.Entity;
+using KursProjectDataBase.Helpers;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace KursProjectDataBase.Controllers
 {
@@ -34,7 +36,7 @@ namespace KursProjectDataBase.Controllers
         public IActionResult Create(PlacementView view)
         {
             _placementService.Create(view,this.HttpContext.User.Identity!.Name!);
-            return RedirectToAction("MyPlacemtns","Placement");
+            return RedirectToAction("MyPlacements","Placement");
         }
 
         [HttpGet]
@@ -46,6 +48,29 @@ namespace KursProjectDataBase.Controllers
         public IActionResult MyPlacements(Placement placement)
         {
             return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Renter")]
+        public IActionResult Edit(int id)
+        {
+            return View(_placementService.GetPlacementView(id));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Renter")]
+        public IActionResult Edit(PlacementView view)
+        {
+            _placementService.Update(view);
+
+            return RedirectToAction("MyPlacements","Placement");
+        }
+
+        [Authorize(Roles = "Renter")]
+        public IActionResult Delete(int id)
+        {
+            _placementService.Delete(id);
+            return RedirectToAction("MyPlacements", "Placement");
         }
     }
 }

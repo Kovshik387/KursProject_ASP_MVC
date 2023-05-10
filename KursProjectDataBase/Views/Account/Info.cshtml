@@ -60,6 +60,7 @@
             <tbody>
                 @foreach (var item in Model.Item3)
                 {
+                    if (item.IdSNavigation.IdTNavigation == null) continue;
                 <tr>
                     @if (who)
                     {

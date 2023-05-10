@@ -1,3 +1,4 @@
+using KursProjectDataBase.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<DataBaseModel.KursProjectDataBaseContext>(options 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie();
 builder.Services.AddAuthentication();
+builder.Services.AddTransient<IHelper,HashHelper>();
 
 var app = builder.Build();
 
@@ -34,3 +36,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+

@@ -92,8 +92,8 @@ namespace KursProjectDataBase.Controllers
             
             var auth = _dataBaseModelContext.Authorizations.Where(a => a.IdU == temp).ToList();
             var contract = _dataBaseModelContext.Contracts.
-                Include(s => s.IdSNavigation).
                 Include(p=>p.IdPNavigation).
+                Include(s => s.IdSNavigation).
                 ThenInclude(r => r.IdRNavigation.IdUNavigation).
                 Include(t => t.IdSNavigation.IdTNavigation.IdUNavigation).
                 Where(e => e.IdSNavigation.IdRNavigation.IdU == temp || e.IdSNavigation.IdTNavigation.IdU == temp).ToList();

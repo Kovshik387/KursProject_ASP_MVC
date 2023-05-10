@@ -1,0 +1,85 @@
+﻿@model DataBaseModel.ViewEntity.PlacementView
+<form method="post">
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>Размещение</legend>
+
+        <form asp-controller="Placement" asp-action="Edit">
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Этаж</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Floor" class="form-control" type="number" value="@Model.Floor"/>
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Площадь м2</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Square" class="form-control" type="text" min="1" max="1000" value="@Model.Square" />
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Количество комнат</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Room" class="form-control" type="number" min="1" max="7" value="@Model.Room" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Район</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Area" class="form-control" type="text" value="@Model.Area" />
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Улица</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Street" class="form-control" type="text" value="@Model.Street" />
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Номер</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Number" class="form-control" type="number" min="1" max="20" value="@Model.Number" />
+                </div>
+            </div>
+
+            <span hidden="hidden">
+                <input asp-for="IdP" value="@Model.IdP" />
+            </span>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Оплата в месяц</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Size" class="form-control" type="number" min="1" value="@Model.Size"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Описание</label>
+                <div class="col-md-4">
+                    <input class="form-control input-md" asp-for="Description" class="form-control" type="text" value ="@Model.Description"/>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <input type="submit" value="Обновить" />
+                </div>
+            </div>
+        </form>
+
+
+    </fieldset>
+</form>
