@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+using System.Buffers;
 using System.Security.Claims;
 
 namespace KursProjectDataBase.Controllers
@@ -41,7 +42,12 @@ namespace KursProjectDataBase.Controllers
             {
                 return RedirectToAction("Info", "Account");
             }
-            return View(result.Description);
+            else
+            {
+                ModelState.AddModelError("", "Логин уже используется");
+            }
+
+            return View(entity);
         }
 
         [HttpGet]
@@ -58,9 +64,13 @@ namespace KursProjectDataBase.Controllers
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
                     new ClaimsPrincipal(result.Data!));
-
                 return RedirectToAction("Index", "Home");
             }
+            else
+            {
+                ModelState.AddModelError("","Пользователь не найден");
+            }
+
             return View(authorization);
         }
 

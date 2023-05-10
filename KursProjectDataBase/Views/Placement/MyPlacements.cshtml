@@ -1,0 +1,46 @@
+﻿@model Tuple<IQueryable<DataBaseModel.Entity.Placement>, List<DataBaseModel.Entity.Contract>>
+@{
+    int count = default(int);
+}
+<p style="margin-right: 0em">
+    @if (Model.Item1.Count() != 0)
+    {
+        <header>Объявления</header>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Этаж</th>
+                    <th>Площадь м2</th>
+                    <th>Количество комнат</th>
+                    <th>Район</th>
+                    <th>Улица</th>
+                    <th>Номер</th>
+                    <th>Тип помещения</th>
+                    <th>Оплата в месяц</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item1)
+                {
+                    <tr>
+                        <td>@item.Floor</td>
+                        <td>@item.Square</td>
+                        <td>@item.Room</td>
+                        <td>@item.Area</td>
+                        <td>@item.Street</td>
+                        <td>@item.Number</td>
+                        <td>@item.IdTypeNavigation.Type</td>
+                        <td>@Model.Item2[count].Paymentsize</td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>
+            У вас ещё нет объявлений
+        </h3>
+    }
+</p>

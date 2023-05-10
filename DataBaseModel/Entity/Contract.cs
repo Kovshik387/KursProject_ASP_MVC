@@ -13,7 +13,7 @@ public partial class Contract
 
     public int Paymentsize { get; set; }
 
-    public int IdPay { get; set; }
+    public int? IdPay { get; set; }
 
     public int IdS { get; set; }
 
