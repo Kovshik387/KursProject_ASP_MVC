@@ -12,7 +12,7 @@ public partial class Solution
 
     public string? Description { get; set; }
 
-    public DateOnly Datesolution { get; set; }
+    public DateOnly? Datesolution { get; set; }
 
     public int? IdT { get; set; }
 

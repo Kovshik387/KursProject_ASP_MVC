@@ -1,14 +1,17 @@
 ﻿@model DataBaseModel.ViewEntity.UserView
-
+@{
+    char mail = '@';
+}
 <form method="post">
     <fieldset>
 
         <!-- Form Name -->
         <legend>Регистрация</legend>
+        <div class="col-6">
 
         <form asp-controller="Account" asp-action="Register">
             <!-- Text input-->
-            <div class="form-group">
+            <div class="form-group w-100">
                 <label class="col-md-4 control-label">Login</label>
                 <div class="col-md-4">
                     <input class="form-control input-md" asp-for="Loginuser" class="form-control" type="text"/>
@@ -16,7 +19,7 @@
             </div>
 
             <!-- Text input-->
-            <div class="form-group">
+                <div class="form-group w-100">
                 <label class="col-md-4 control-label">Password</label>
                 <div class="col-md-4">
                     <input class="form-control input-md" asp-for="Passworduser" class="form-control" type="text" />
@@ -24,7 +27,7 @@
             </div>
 
             <!-- Text input-->
-            <div class="form-group">
+                <div class="form-group w-100">
                 <label class="col-md-4 control-label">Имя</label>
                 <div class="col-md-4">
                     <input class="form-control input-md" asp-for="Name" class="form-control" type="text" />
@@ -32,23 +35,19 @@
             </div>
 
             <!-- Text input-->
-            <div class="form-group">
                 <label class="col-md-4 control-label">Фамилия</label>
                 <div class="col-md-4">
                     <input class="form-control input-md" asp-for="Surname" class="form-control" type="text" />
                 </div>
-            </div>
 
-            <!-- Text input-->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Контактные данные</label>
-                <div class="col-md-4">
-                    <input class="form-control input-md" asp-for="Contact" class="form-control" type="text" />
+            <label class="col-md-4 w-50 control-label">Контактные данные</label>
+                <div class="input-group md-4 w-50">
+                    <span class="input-group-text" id="basic-addon1">@mail</span>
+                    <input class="form-control input-md " asp-for="Contact" class="form-control" type="text" />
                 </div>
-            </div>
 
             <!-- Select Basic -->
-            <div class="form-group">
+                <div class="form-group w-100">
                 <label class="col-md-4 control-label" for="selectbasic">Пол</label>
                 <div class="col-md-4">
                     <select asp-for="Sex" class="form-control">
@@ -59,7 +58,7 @@
             </div>
 
             <!-- Select Basic -->
-            <div class="form-group">
+                <div class="form-group w-100">
                 <label class="col-md-4 control-label" for="selectbasic">Тип</label>
                 <div class="col-md-4">
                     <select asp-for="TypeUser" class="form-control">
@@ -79,7 +78,7 @@
                 </div>
             </div>
         </form>
-
+        </div>
 
     </fieldset>
 </form>

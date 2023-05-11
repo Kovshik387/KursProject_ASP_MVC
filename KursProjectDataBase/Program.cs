@@ -10,7 +10,6 @@ builder.Services.AddDbContext<DataBaseModel.KursProjectDataBaseContext>(options 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie();
 builder.Services.AddAuthentication();
-builder.Services.AddTransient<IHelper,HashHelper>();
 
 var app = builder.Build();
 

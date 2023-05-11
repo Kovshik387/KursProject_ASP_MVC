@@ -30,25 +30,41 @@ namespace KursProjectDataBase.Services
             return result;
         }
 
-        public PlacementView GetPlacementView(int _id)
+        public IQueryable<Contract> TenantPlacements()
         {
+            return _dataBaseModelContext.Contracts.
+                Include(t => t.IdPNavigation).
+                    ThenInclude(type => type.IdTypeNavigation).
+                Include(s => s.IdSNavigation).Where(item => item.IdSNavigation.IdT == null);
+        }
+        
+        public PlacementView GetPlacementView(string _id)
+        {
+            int position = default(int);
+
+            foreach (var item in _dataBaseModelContext.Contracts)
+                if (_hashHelper.HashString(item.IdC).Equals(_id))
+                    position = item.IdP;
+
             var placement = _dataBaseModelContext.Contracts.
                 Include(t => t.IdPNavigation).
                     ThenInclude(type => type.IdTypeNavigation).
                 Include(s => s.IdSNavigation).
-                Where(p => p.IdC == _id).First();
+                Where(p => p.IdP == position).First();
 
             return new PlacementView()
             {
                 IdP = placement.IdP,
                 Floor = placement.IdPNavigation.Floor,
                 Area = placement.IdPNavigation.Area,
+                Type = placement.IdPNavigation.IdTypeNavigation.Type,
                 IdType = placement.IdPNavigation.IdType,
                 Number = placement.IdPNavigation.Number,
                 Room = placement.IdPNavigation.Room,
                 Square = placement.IdPNavigation.Square,
                 Street = placement.IdPNavigation.Street,
                 Size = placement.Paymentsize,
+                IdSolution = placement.IdSNavigation.IdS,
                 Description = placement.IdSNavigation.Description != null ? placement.IdSNavigation.Description : "",
             };
         }
@@ -60,7 +76,6 @@ namespace KursProjectDataBase.Services
         {
             var solution = this._dataBaseModelContext.Contracts.Include(c => c.IdSNavigation).Include(p => p.IdPNavigation).Where(p => p.IdPNavigation.IdP == view.IdP).First();
 
-
             solution.IdPNavigation.Street = view.Street;
             solution.IdPNavigation.Square = view.Square;
             solution.IdPNavigation.Number = view.Number;
@@ -70,9 +85,27 @@ namespace KursProjectDataBase.Services
             solution.IdPNavigation.IdP = view.IdP;
 
             solution.IdSNavigation.Description = view.Description;
+            
             solution.Paymentsize = view.Size;
 
             _dataBaseModelContext.SaveChanges();
+        }
+
+        public void SetDeal(PlacementView view,int id)
+        {
+            int id_tenant = _dataBaseModelContext.Tenants.Where(item => item.IdU == id).First().IdT;
+
+            _dataBaseModelContext.Contracts.Include(c => c.IdSNavigation).Where(s => s.IdSNavigation.IdS == view.IdSolution).ExecuteUpdate(prop => prop.
+                SetProperty(item => item.IdPay, item => view.IdPay)
+                
+            );
+
+            var date = DateOnly.Parse(DateTime.Now.ToString().Substring(0, 10));
+
+            _dataBaseModelContext.Solutions.Where(id => id.IdS == view.IdSolution).ExecuteUpdate(prop => prop.
+                SetProperty(item => item.IdT, item => id_tenant).
+                SetProperty(item => item.Datesolution, item => date)
+            );
         }
 
         public void Delete(int id)
@@ -111,7 +144,7 @@ namespace KursProjectDataBase.Services
 
             var solution = new Solution()
             {
-                Datesolution = DateOnly.Parse(DateTime.Now.ToString().Substring(0, 10)),
+                
                 Description = view.Description,
                 IdR = id_r,
             };

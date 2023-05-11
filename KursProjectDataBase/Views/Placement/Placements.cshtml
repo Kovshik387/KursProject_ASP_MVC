@@ -23,7 +23,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    if (item.IdSNavigation.IdT != null) continue;
+                    if (item == null) continue;
                     <tr>
                         <td>@item.IdPNavigation.Floor</td>
                         <td>@item.IdPNavigation.Square</td>
@@ -34,24 +34,24 @@
                         <td>@item.IdPNavigation.IdTypeNavigation.Type</td>
                         <td>@item.Paymentsize</td>
                         <td>
-                            <a input type"submit" class="btn btn-outline-ifno" asp-action="Edit" asp-route-id="@hashHelper.HashString(item.IdC)">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a input type"sumbit" class="btn btn-outline-ifno" asp-action="Delete" asp-route-id="@item.IdC">
-                                <i class="bi bi-trash"></i>
+                            <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdC)">
+                                <i class="bi bi-check2"></i>
                             </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+        <div>
+            <ui class="pagination">
+                
+            </ui>
+        </div>
     }
     else
     {
         <h3>
-            У вас нет активный объявлений
+            Нет активных объявлений
         </h3>
     }
 </p>

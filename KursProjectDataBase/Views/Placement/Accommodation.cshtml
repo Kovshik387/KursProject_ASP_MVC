@@ -1,0 +1,68 @@
+﻿@model DataBaseModel.ViewEntity.PlacementView
+
+<form method="post">
+    <fieldset>
+
+        <legend>Информация</legend>
+
+        <form asp-controller="Placement" asp-action="Info">
+
+            <label class="col-md-4 control-label">Адрес</label>
+            <div class="input-group">
+                <span class="form-control input-md ">@Model.Area</span>
+                <div class="form-control input-md">@Model.Street </div>
+                <div class="form-control input-md">@Model.Number </div>
+            </div>
+
+            <label class="col-md-4 control-label">@Model.Type</label>
+            <div class="input-group">
+                <span class="input-group-text">Этаж</span>
+                <span class="form-control input-md ">@Model.Floor</span>
+                <span class="input-group-text">Кол-во комнат</span>
+                <div class="form-control input-md">@Model.Room</div>
+                <span class="input-group-text">Площадь</span>
+                <div class="form-control input-md">@Model.Square</div>
+                <span class="input-group-text">м2</span>
+            </div>
+
+            <span hidden="hidden">
+                <input asp-for="IdP" value="@Model.IdP" />
+                <input asp-for="IdSolution" value="@Model.IdSolution"/>
+            </span>
+
+            <div class="input-group mt-4">
+
+                <div class="col-md-4">
+                    <label class="col control-label">Оплата в месяц</label>
+                    <div class="form-control input-md">@Model.Size</div>
+                </div>
+                
+                <div class="ms-2"></div>
+
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Описание</label>
+                    <div class="form-control input-md">@Model.Description</div>
+                </div>
+
+                <div class="ms-2"></div>
+
+                <div class="col-md-4">
+                    <label class="col control-label" for="selectbasic">Способ оплаты</label>
+                    <select asp-for="IdPay" class="form-control">
+                        <option value="1">Наличные</option>
+                        <option value="2">Безналичные</option>
+                    </select>
+                </div>
+            
+            </div>
+            
+            <div class="">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <input type="submit" value="Снять" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+
+    </fieldset>
+</form>

@@ -15,13 +15,14 @@ namespace KursProjectDataBase.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly KursProjectDataBaseContext _dataBaseModelContext;
         private readonly PlacementService _placementService;
+        private readonly IConfiguration _configuration;
 
-        public PlacementController(ILogger<HomeController> logger, KursProjectDataBaseContext context)
+        public PlacementController(ILogger<HomeController> logger, KursProjectDataBaseContext context, IConfiguration configuration)
         {
             _logger = logger;
             _dataBaseModelContext = context;
             _placementService = new (context);
-            
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -52,10 +53,8 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Renter")]
-        public IActionResult Edit(int id)
-        {
-            return View(_placementService.GetPlacementView(id));
-        }
+        public IActionResult Edit(string id) => View(_placementService.GetPlacementView(id));
+        
 
         [HttpPost]
         [Authorize(Roles = "Renter")]
@@ -72,5 +71,25 @@ namespace KursProjectDataBase.Controllers
             _placementService.Delete(id);
             return RedirectToAction("MyPlacements", "Placement");
         }
+
+        [HttpGet]
+        [Authorize(Roles ="Tenant")]
+        public IActionResult Placements() => View(_placementService.TenantPlacements());
+
+        [HttpGet]
+        [Authorize(Roles = "Tenant")]
+        public IActionResult Accommodation(string id)
+        {
+            return View(_placementService.GetPlacementView(id));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Tenant")]
+        public IActionResult Accommodation(PlacementView view)
+        {
+            _placementService.SetDeal(view, int.Parse(this.HttpContext.User.Identity!.Name!));
+            return RedirectToAction("Info", "Account");
+        }
+
     }
 }

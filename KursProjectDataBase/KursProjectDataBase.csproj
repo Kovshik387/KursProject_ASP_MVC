@@ -37,4 +37,8 @@
     <None Include="Views\Account\Logout.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+
 </Project>

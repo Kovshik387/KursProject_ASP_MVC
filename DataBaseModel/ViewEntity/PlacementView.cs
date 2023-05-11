@@ -28,6 +28,11 @@ namespace DataBaseModel.ViewEntity
 
         public int Size { get; set; }
 
+        public int? IdPay { get; set; }
+
+        public int? IdSolution { get; set; }
+
+        public string? Type { get; set; }
         public string Description { get; set; } = null!;
 
     }
