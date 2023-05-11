@@ -7,6 +7,8 @@ using KursProjectDataBase.Services;
 using DataBaseModel.Entity;
 using KursProjectDataBase.Helpers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using KursProjectDataBase.Models;
 
 namespace KursProjectDataBase.Controllers
 {
@@ -73,8 +75,25 @@ namespace KursProjectDataBase.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Tenant")]
-        public IActionResult Placements() => View(_placementService.TenantPlacements());
+        [Authorize(Roles = "Tenant")]
+        public IActionResult Placements(int page = 1) 
+        {
+            int pageSize = 10;
+
+            var source = _placementService.TenantPlacements();
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            PageViewModel pageViewModel = new(count,page,pageSize);
+            IndexViewModel viewModel = new()
+            {
+                PageViewModel = pageViewModel,
+                Contracts = items,
+            };
+
+            return View(viewModel); 
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Tenant")]

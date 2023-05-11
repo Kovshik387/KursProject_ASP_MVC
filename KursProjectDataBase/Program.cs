@@ -10,7 +10,7 @@ builder.Services.AddDbContext<DataBaseModel.KursProjectDataBaseContext>(options 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie();
 builder.Services.AddAuthentication();
-
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

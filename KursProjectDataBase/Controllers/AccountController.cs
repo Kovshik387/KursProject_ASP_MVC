@@ -19,12 +19,14 @@ namespace KursProjectDataBase.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly KursProjectDataBaseContext _dataBaseModelContext;
         private readonly AccountService _accountService;
+        private readonly PlacementService _placementService;
 
         public AccountController(ILogger<HomeController> logger, KursProjectDataBaseContext context)
         {
             _logger = logger;
             _dataBaseModelContext = context;
             _accountService = new AccountService(context);
+            _placementService = new PlacementService(context);
         }
         [HttpGet]
         public IActionResult Register()
@@ -146,7 +148,20 @@ namespace KursProjectDataBase.Controllers
             return RedirectToAction("Info", "Account");
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Tenant, Renter")]
+        public IActionResult PlacementInfo(string id)
+        {
+            return View(_placementService.GetPlacementView(id));
+        }
 
-        
+        [HttpPost]
+        [Authorize(Roles = "Tenant, Renter")]
+        public IActionResult PlacementInfo()
+        {
+            return RedirectToAction("Info", "Account");
+        }
+
+
     }
 }

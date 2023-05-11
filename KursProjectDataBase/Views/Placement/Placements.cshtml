@@ -1,10 +1,10 @@
-﻿@model IQueryable<DataBaseModel.Entity.Contract>
+﻿@model KursProjectDataBase.Models.IndexViewModel 
 @{
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
 }
 
 <p style="margin-right: 0px">
-    @if (Model.Count() != 0)
+    @if (Model.Contracts.Count() != 0)
     {
         <header>Объявления</header>
         <table class="table ">
@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Contracts)
                 {
                     if (item == null) continue;
                     <tr>
@@ -42,11 +42,26 @@
                 }
             </tbody>
         </table>
-        <div>
-            <ui class="pagination">
-                
-            </ui>
-        </div>
+
+        @if (Model.PageViewModel!.HasPreviousPage)
+        {
+            <a asp-action="Placements"
+                asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+               class="btn btn-outline-blue">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+                Назад
+            </a>
+        }
+        @if (Model.PageViewModel.HasNextPage)
+        {
+            <a asp-action="Placements"
+               asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+               class="btn btn-outline-blue">
+                Вперед
+                <i class="glyphicon glyphicon-chevron-right"></i>
+            </a>
+        }
+
     }
     else
     {
