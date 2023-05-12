@@ -19,6 +19,12 @@ namespace KursProjectDataBase.Controllers
         private readonly PlacementService _placementService;
         private readonly IConfiguration _configuration;
 
+        enum SearchType
+        {
+            Area = 1,
+            Street
+        }
+
         public PlacementController(ILogger<HomeController> logger, KursProjectDataBaseContext context, IConfiguration configuration)
         {
             _logger = logger;
@@ -76,11 +82,27 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Tenant")]
-        public IActionResult Placements(int page = 1) 
+        public IActionResult Placements(string? search, int? type,int page = 1) 
         {
-            int pageSize = 10;
+            int pageSize = 8;
+            IQueryable<Contract> source;
 
-            var source = _placementService.TenantPlacements();
+            if (search != null && type != null)
+            {
+                if ((SearchType)type == SearchType.Area)
+                {
+                    source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Area == search);
+                }
+                else
+                {
+                    source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
+                }
+            }
+            else
+            {
+                source = _placementService.TenantPlacements();
+            }
+
             var count = source.Count();
             var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 

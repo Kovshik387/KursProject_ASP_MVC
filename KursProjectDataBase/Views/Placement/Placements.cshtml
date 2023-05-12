@@ -2,71 +2,102 @@
 @{
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
 }
+@if (Model.Contracts.Count() != 0)
+{
+        <div class="btn-group">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Фильтр
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                    <a class="dropdown-item" onclick="location.href = '@Url.Action("Placements", "Placement")?search=' + document.getElementById('search').value +'&page=1&type=1'; return false;">Район</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item" onclick="location.href = '@Url.Action("Placements", "Placement")?search=' + document.getElementById('search').value +'&page=1&type=2'; return false;">Улица</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="m-md-1"></div>
 
-<p style="margin-right: 0px">
-    @if (Model.Contracts.Count() != 0)
-    {
-        <header>Объявления</header>
-        <table class="table ">
-            <thead>
+            <input type="text" class="form-control" id="search" name="search" placeholder="Строка поиска">
+
+            <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements" asp-route-page="1">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        </div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="auto">Этаж</th>
+                <th>Площадь м2</th>
+                <th>Кол-во комнат</th>
+                <th>Район</th>
+                <th>Улица</th>
+                <th>Номер</th>
+                <th>Тип помещения</th>
+                <th>Оплата в месяц</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Contracts)
+            {
+                if (item == null) continue;
                 <tr>
-                    <th scope="auto">Этаж</th>
-                    <th>Площадь м2</th>
-                    <th>Кол-во комнат</th>
-                    <th>Район</th>
-                    <th>Улица</th>
-                    <th>Номер</th>
-                    <th>Тип помещения</th>
-                    <th>Оплата в месяц</th>
+                    <td>@item.IdPNavigation.Floor</td>
+                    <td>@item.IdPNavigation.Square</td>
+                    <td>@item.IdPNavigation.Room</td>
+                    <td>@item.IdPNavigation.Area</td>
+                    <td>@item.IdPNavigation.Street</td>
+                    <td>@item.IdPNavigation.Number</td>
+                    <td>@item.IdPNavigation.IdTypeNavigation.Type</td>
+                    <td>@item.Paymentsize</td>
+                    <td>
+                        <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdC)">
+                            <i class="bi bi-check2"></i>
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Contracts)
-                {
-                    if (item == null) continue;
-                    <tr>
-                        <td>@item.IdPNavigation.Floor</td>
-                        <td>@item.IdPNavigation.Square</td>
-                        <td>@item.IdPNavigation.Room</td>
-                        <td>@item.IdPNavigation.Area</td>
-                        <td>@item.IdPNavigation.Street</td>
-                        <td>@item.IdPNavigation.Number</td>
-                        <td>@item.IdPNavigation.IdTypeNavigation.Type</td>
-                        <td>@item.Paymentsize</td>
-                        <td>
-                            <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdC)">
-                                <i class="bi bi-check2"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
 
-        @if (Model.PageViewModel!.HasPreviousPage)
-        {
-            <a asp-action="Placements"
-                asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-               class="btn btn-outline-blue">
-                <i class="glyphicon glyphicon-chevron-left"></i>
-                Назад
-            </a>
-        }
-        @if (Model.PageViewModel.HasNextPage)
-        {
-            <a asp-action="Placements"
-               asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-               class="btn btn-outline-blue">
-                Вперед
-                <i class="glyphicon glyphicon-chevron-right"></i>
-            </a>
-        }
-
-    }
-    else
+    @if (Model.PageViewModel!.HasPreviousPage)
     {
-        <h3>
-            Нет активных объявлений
-        </h3>
+        <a asp-action="Placements"
+            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-outline-blue">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
     }
-</p>
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Placements"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-outline-blue">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+
+}
+else
+{
+    <h3>
+        Нет активных объявлений
+    </h3>
+}
+
+    @section Scripts
+        {
+        <script>
+            $("#lnk").click(function (evt) {
+                var fakedUri = $("#lnk").prop("href");
+                var uri = fakedUri.replace("xxxx", document.getElementById('txtID').value);
+                $("#lnk").prop("href", uri);
+            });
+        </script>
+    }
