@@ -9,6 +9,7 @@ using KursProjectDataBase.Helpers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using KursProjectDataBase.Models;
+using static KursProjectDataBase.Models.IndexViewModel;
 
 namespace KursProjectDataBase.Controllers
 {
@@ -82,27 +83,23 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Tenant")]
-        public IActionResult Placements(string? search, int? type,int page = 1) 
+        public IActionResult Placements(string search, int type = 1,int page = 1) 
         {
+            
             int pageSize = 8;
             IQueryable<Contract> source;
 
-            if (search != null && type != null)
-            {
-                if ((SearchType)type == SearchType.Area)
-                {
-                    source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Area == search);
-                }
-                else
-                {
-                    source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
-                }
-            }
-            else
-            {
-                source = _placementService.TenantPlacements();
-            }
+            ViewBag.Search = search;
+            ViewBag.Type = type;
 
+            if (search != null && (SearchType)type == SearchType.Area)
+            {
+                source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Area == search);
+            }
+            else 
+            if ((SearchType)type == SearchType.Street && search != null) source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
+            else source = _placementService.TenantPlacements();
+            
             var count = source.Count();
             var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
@@ -112,6 +109,7 @@ namespace KursProjectDataBase.Controllers
                 PageViewModel = pageViewModel,
                 Contracts = items,
             };
+
 
             return View(viewModel); 
         }

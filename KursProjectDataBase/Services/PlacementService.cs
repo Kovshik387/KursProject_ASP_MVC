@@ -35,6 +35,9 @@ namespace KursProjectDataBase.Services
             return _dataBaseModelContext.Contracts.
                 Include(t => t.IdPNavigation).
                     ThenInclude(type => type.IdTypeNavigation).
+                Include(s => s.IdSNavigation).
+                    ThenInclude(r => r.IdRNavigation).
+                    ThenInclude(u => u.IdUNavigation).
                 Include(s => s.IdSNavigation).Where(item => item.IdSNavigation.IdT == null);
         }
         

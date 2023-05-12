@@ -1,36 +1,48 @@
 ﻿@model KursProjectDataBase.Models.IndexViewModel 
 @{
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
+
 }
-@if (Model.Contracts.Count() != 0)
+@if (Model.Contracts!.Count() != 0)
 {
-        <div class="btn-group">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Фильтр
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                    <a class="dropdown-item" onclick="location.href = '@Url.Action("Placements", "Placement")?search=' + document.getElementById('search').value +'&page=1&type=1'; return false;">Район</a>
-                    </li>
-                    <li>
-                    <a class="dropdown-item" onclick="location.href = '@Url.Action("Placements", "Placement")?search=' + document.getElementById('search').value +'&page=1&type=2'; return false;">Улица</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="m-md-1"></div>
+    <form asp-action="Placements" method="get">
+            <p>
+                <div class="btn-group">
 
-            <input type="text" class="form-control" id="search" name="search" placeholder="Строка поиска">
+                    @*<div class="dropdown" >*@
 
-            <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements" asp-route-page="1">
-                <i class="bi bi-x-lg"></i>
-            </a>
-        </div>
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Фильтр
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                        <button class="dropdown-item rounded-2 active" rounded-2" name="type" value="@(ViewBag.Type = 1)">
+                            Район
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 2)">Улица
+                                </button>
+                            </li>
+                        </ul>
+                            
+                    @*</div>*@
 
+                    <div class="m-md-1"></div>
+                    
+                    <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска" />
+
+                    <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </div>
+            </p>
+    </form>
 
     <table class="table">
         <thead>
             <tr>
+                <th>Арендодатель</th>
                 <th scope="auto">Этаж</th>
                 <th>Площадь м2</th>
                 <th>Кол-во комнат</th>
@@ -42,10 +54,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Contracts)
+            @foreach (var item in Model.Contracts!)
             {
                 if (item == null) continue;
                 <tr>
+                    <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Name</td>
                     <td>@item.IdPNavigation.Floor</td>
                     <td>@item.IdPNavigation.Square</td>
                     <td>@item.IdPNavigation.Room</td>
@@ -67,6 +80,7 @@
     @if (Model.PageViewModel!.HasPreviousPage)
     {
         <a asp-action="Placements"
+            asp-route-search="@ViewBag.Search"
             asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
            class="btn btn-outline-blue">
             <i class="glyphicon glyphicon-chevron-left"></i>
@@ -76,7 +90,8 @@
     @if (Model.PageViewModel.HasNextPage)
     {
         <a asp-action="Placements"
-           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+            asp-route-search="@ViewBag.Search"
+            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
            class="btn btn-outline-blue">
             Вперед
             <i class="glyphicon glyphicon-chevron-right"></i>
