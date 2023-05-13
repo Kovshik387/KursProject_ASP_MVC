@@ -1,44 +1,50 @@
 ﻿@model KursProjectDataBase.Models.IndexViewModel 
 @{
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
-
 }
 @if (Model.Contracts!.Count() != 0)
 {
     <form asp-action="Placements" method="get">
-            <p>
-                <div class="btn-group">
+        <p>
+            <div class="btn-group">
 
-                    @*<div class="dropdown" >*@
-
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Фильтр
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                        <button class="dropdown-item rounded-2 active" rounded-2" name="type" value="@(ViewBag.Type = 1)">
-                            Район
-                                </button>
-                            </li>
-                            <li>
-                                <button class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 2)">Улица
-                                </button>
-                            </li>
-                        </ul>
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                    Фильтр
+                </button>
+                <ul class="dropdown-menu w-100">
+                    <li>
+                        <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска" />
+                    </li>
+                    <li>
+                        @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
+                        {
+                            <button class="dropdown-item rounded-2 active" rounded-2" name="type" value="@(ViewBag.Type = 1)">
+                                Район
+                            </button>
                             
-                    @*</div>*@
+                        }
+                    </li>
+                    <li>
+@*                        @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
+                        {
+                            <button class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 2)">
+                                Улица
+                            </button>
+                        }*@
+                    </li>
+                </ul>
 
-                    <div class="m-md-1"></div>
+                <div class="m-md-1"></div>
+
+                
+
+                <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements">
                     
-                    <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска" />
-
-                    <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements">
-                        <i class="bi bi-x-lg"></i>
-                    </a>
-                </div>
-            </p>
-    </form>
-
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            </div>
+        </p>
+    
     <table class="table">
         <thead>
             <tr>
@@ -50,7 +56,13 @@
                 <th>Улица</th>
                 <th>Номер</th>
                 <th>Тип помещения</th>
-                <th>Оплата в месяц</th>
+                <th>
+                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type=ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+                    : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})
+                </th>
+                <th>
+                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type=ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -76,11 +88,12 @@
             }
         </tbody>
     </table>
-
+    
     @if (Model.PageViewModel!.HasPreviousPage)
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
+            asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
            class="btn btn-outline-blue">
             <i class="glyphicon glyphicon-chevron-left"></i>
@@ -91,13 +104,15 @@
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
+            asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+
            class="btn btn-outline-blue">
             Вперед
             <i class="glyphicon glyphicon-chevron-right"></i>
         </a>
     }
-
+    </form>
 }
 else
 {
@@ -105,14 +120,3 @@ else
         Нет активных объявлений
     </h3>
 }
-
-    @section Scripts
-        {
-        <script>
-            $("#lnk").click(function (evt) {
-                var fakedUri = $("#lnk").prop("href");
-                var uri = fakedUri.replace("xxxx", document.getElementById('txtID').value);
-                $("#lnk").prop("href", uri);
-            });
-        </script>
-    }

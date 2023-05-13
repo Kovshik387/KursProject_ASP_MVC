@@ -83,23 +83,33 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Tenant")]
-        public IActionResult Placements(string search, int type = 1,int page = 1) 
+        public IActionResult Placements(string search, SortState state, int type,int page = 1) 
         {
             
             int pageSize = 8;
             IQueryable<Contract> source;
 
             ViewBag.Search = search;
+            ViewBag.State = state;
             ViewBag.Type = type;
 
             if (search != null && (SearchType)type == SearchType.Area)
             {
                 source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Area == search);
             }
-            else 
-            if ((SearchType)type == SearchType.Street && search != null) source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
-            else source = _placementService.TenantPlacements();
-            
+            else
+            {
+                if ((SearchType)type == SearchType.Street && search != null) source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
+                else source = _placementService.TenantPlacements();
+            }
+
+            source = state switch
+            {
+                SortState.Asc => source.OrderBy(p => p.Paymentsize),
+                SortState.Desc => source.OrderByDescending(p => p.Paymentsize),
+                _ => source
+            };
+
             var count = source.Count();
             var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
