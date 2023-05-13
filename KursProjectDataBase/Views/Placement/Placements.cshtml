@@ -53,11 +53,11 @@
                 <th>Номер</th>
                 <th>Тип помещения</th>
                 <th>
-                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type =1, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type =ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
                     : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})
                 </th>
                 <th>
-                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type = 1, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type = ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
                 </th>
             </tr>
         </thead>
@@ -89,7 +89,7 @@
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
-            asp-route-type="@(1)"
+            asp-route-type="@(ViewBag.Type)"
             asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
            class="btn btn-outline-blue">
@@ -101,7 +101,7 @@
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
-            asp-route-type="@(1)"
+            asp-route-type="@(ViewBag.Type)"
             asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
 
