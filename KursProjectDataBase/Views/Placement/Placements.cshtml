@@ -16,24 +16,20 @@
                         <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска" />
                     </li>
                     <li>
-                        @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
-                        {
-                            <button class="dropdown-item rounded-2 active" rounded-2" name="type" value="@(ViewBag.Type = 1)">
+                    @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
+                    {
+                            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 1)">
                                 Район
                             </button>
-                            
-                        }
+                    }
                     </li>
                     <li>
-@*                        @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
-                        {
-                            <button class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 2)">
+                            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="type" onclick="@(ViewBag.Type = 2)" value="@(ViewBag.Type = 2)">
                                 Улица
                             </button>
-                        }*@
                     </li>
                 </ul>
-
+                
                 <div class="m-md-1"></div>
 
                 
@@ -57,11 +53,11 @@
                 <th>Номер</th>
                 <th>Тип помещения</th>
                 <th>
-                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type=ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type =1, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
                     : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})
                 </th>
                 <th>
-                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type=ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type = 1, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
                 </th>
             </tr>
         </thead>
@@ -93,6 +89,7 @@
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
+            asp-route-type="@(1)"
             asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
            class="btn btn-outline-blue">
@@ -104,6 +101,7 @@
     {
         <a asp-action="Placements"
             asp-route-search="@ViewBag.Search"
+            asp-route-type="@(1)"
             asp-route-state="@ViewBag.State"
             asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
 
