@@ -20,7 +20,8 @@ namespace KursProjectDataBase.Services
         private enum Role
         {
             Tenant = 1,
-            Renter = 2
+            Renter = 2,
+            Admin
         }
 
         public AccountService(KursProjectDataBaseContext dataBaseModelContext)
@@ -141,14 +142,29 @@ namespace KursProjectDataBase.Services
                     };
                 }
 
-                var role = _dataBaseModelContext.Tenants.Where(u => u.IdU == check.IdU).ToList();
-                ClaimsIdentity result;
-
-                return new BaseResponse<ClaimsIdentity>()
+                
+                if (check.IdType == 1)
                 {
-                    Data = role.Count == 1 ? result = Authenticate(check, Role.Tenant): result = Authenticate(check, Role.Renter) ,
-                    StatusCode = DataBaseModel.Enum.StatusCode.OK,
-                };
+                    Role role_user = default(Role);
+                    if (_dataBaseModelContext.Tenants.Where(u => u.IdU == check.IdU).ToList().Count == 1) role_user = Role.Tenant;
+                    else role_user = Role.Renter;
+
+                    Console.WriteLine(role_user.ToString());
+
+                    return new BaseResponse<ClaimsIdentity>()
+                    {
+                        Data = Authenticate(check, role_user),
+                        StatusCode = DataBaseModel.Enum.StatusCode.OK,
+                    };
+                }
+                else
+                {
+                    return new BaseResponse<ClaimsIdentity>()
+                    {
+                        Data = Authenticate(check,Role.Admin),
+                        StatusCode = DataBaseModel.Enum.StatusCode.OK,
+                    };
+                }
             }
             catch (Exception ex) 
             {

@@ -29,14 +29,18 @@
                             
                             @if (this.Context.User.Identity!.IsAuthenticated)
                             {
-                                @if (this.Context.User.FindFirst("Role")!.Value == "Renter")
+                                @switch (this.Context.User.FindFirst("Role")!.Value) 
                                 {
-                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="Create">Создать объявление</a></li>
-                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="MyPlacements">Мои объявления</a></li>
-                                }
-                                else
-                                {
-                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="Placements">Объявления</a></li>
+                                    case "Renter":
+                                        <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="Create">Создать объявление</a></li>
+                                        <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="MyPlacements">Мои объявления</a></li>
+                                        break;
+                                    case "Tenant":
+                                        <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="Placements">Объявления</a></li>
+                                        break;
+                                    default:
+                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="UsersList">Объявления</a></li>
+                                        break;
                                 }
                                 <li class="nav-item">
                                     <div style="margin-right: 150px">

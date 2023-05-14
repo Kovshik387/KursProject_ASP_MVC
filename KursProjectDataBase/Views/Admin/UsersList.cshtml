@@ -1,0 +1,80 @@
+﻿@model Tuple<List<DataBaseModel.Entity.Tenant>,List<DataBaseModel.Entity.Renter>>
+@{
+    KursProjectDataBase.Helpers.HashHelper hashHelper = new();
+    string view = ViewBag.Role == "Tenant" ? "Съёмщики" : "Арендодатели";
+}
+
+<form method="get">
+
+    @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
+    {
+        <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role" onclick="@(ViewBag.Role = "Renter")" value="@(ViewBag.Role = "Renter")">
+            Арендодатели
+        </button>
+    }
+
+
+
+    <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role"  onclick="@(ViewBag.Role = "Tenant")" value="@(ViewBag.Role = "Tenant")">
+        Съёмщики
+    </button>
+
+    <div class="m-md-1"></div>
+
+
+
+<table class="table">
+    <thead>
+        <h>@view</h>
+        <tr>
+            <th>ID</th>
+            <th scope="auto">Имя</th>
+            <th>Фамилия</th>
+            <th>Контакт</th>
+            <th>Пол</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.Role == "Tenant")
+        {
+            @foreach (var item in Model.Item1)
+            {
+
+                <tr>
+                    <td>@item.IdU</td>
+                    <td>@item.IdUNavigation.Name</td>
+                    <td>@item.IdUNavigation.Surname</td>
+                    <td>@item.IdUNavigation.Contact</td>
+                    <td>@item.IdUNavigation.Sex</td>
+                    <td>
+                        <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdU)">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdU)">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            @foreach (var item in Model.Item2)
+            {
+                <tr>
+                    <td>@item.IdU</td>
+                    <td>@item.IdUNavigation.Name</td>
+                    <td>@item.IdUNavigation.Surname</td>
+                    <td>@item.IdUNavigation.Contact</td>
+                    <td>@item.IdUNavigation.Sex</td>
+                    <td>
+                        <a input type"submit" class="btn btn-outline-ifno" asp-action="Accommodation" asp-route-id="@hashHelper.HashString(item.IdU)">
+                            <i class="bi bi-check2"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+</form>

@@ -1,6 +1,10 @@
 ﻿@model KursProjectDataBase.Models.IndexViewModel 
 @{
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
+    ViewBag.TypeStreet = ViewBag.TypeStreet == 2 ? ViewBag.TypeStreet : 0;
+    ViewBag.TypeArea = ViewBag.TypeArea == 1 ? ViewBag.TypeArea : 0;
+    int type_street = 0;
+    int type_area = 0;
 }
 @if (Model.Contracts!.Count() != 0)
 {
@@ -13,34 +17,26 @@
                 </button>
                 <ul class="dropdown-menu w-100">
                     <li>
-                        <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска" />
+                        <input type="search" class="form-control" name="search" value="@ViewBag.Search" placeholder="Строка поиска"/>
                     </li>
                     <li>
-                    @using (Html.BeginForm("Placements", "Placement", FormMethod.Get))
-                    {
-                            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="type" value="@(ViewBag.Type = 1)">
-                                Район
-                            </button>
-                    }
-                    </li>
+                        <button type="submit" class="dropdown-item rounded-2" rounded-2" name="typeArea" value="@(type_area = 1)">
+                            Район
+                        </button>
                     <li>
-                            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="type" onclick="@(ViewBag.Type = 2)" value="@(ViewBag.Type = 2)">
-                                Улица
-                            </button>
+                        <button type="submit" class="dropdown-item rounded-2" rounded-2" name="typeStreet" value="@(type_street = 2)">
+                            Улица
+                        </button>
                     </li>
                 </ul>
-                
                 <div class="m-md-1"></div>
-
-                
-
                 <a input type"submit" class="btn btn-outline-ifno" asp-action="Placements">
-                    
                     <i class="bi bi-x-lg"></i>
                 </a>
             </div>
         </p>
-    
+    </form>
+    <form>
     <table class="table">
         <thead>
             <tr>
@@ -53,8 +49,19 @@
                 <th>Номер</th>
                 <th>Тип помещения</th>
                 <th>
-                        @Html.ActionLink("Оплата в месяц","Placements", new {search = ViewBag.Search, type =ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+                    @if(ViewBag.TypeArea == 1)
+                    {
+                            @Html.ActionLink("Стоимость","Placements", new {search = ViewBag.Search, typeArea = type_area, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
                     : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})
+
+
+                    }
+                    else
+                    {
+                            @Html.ActionLink("Стоимость","Placements", new {search = ViewBag.Search, typeStreet = type_street, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+                    : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})
+                    }
+
                 </th>
                 <th>
                         @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type = ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
@@ -87,29 +94,58 @@
     
     @if (Model.PageViewModel!.HasPreviousPage)
     {
-        <a asp-action="Placements"
-            asp-route-search="@ViewBag.Search"
-            asp-route-type="@(ViewBag.Type)"
-            asp-route-state="@ViewBag.State"
-            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           class="btn btn-outline-blue">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Назад
-        </a>
+            if (ViewBag.TypeArea == 0)
+            {
+                <a asp-action="Placements"
+                   asp-route-search="@ViewBag.Search"
+                   asp-route-typeStreet="@(ViewBag.TypeStreet)"
+                   asp-route-state="@ViewBag.State"
+                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                   class="btn btn-outline-blue">
+                    Назад
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+            else
+            {
+                <a asp-action="Placements"
+                   asp-route-search="@ViewBag.Search"
+                   asp-route-typeArea="@(ViewBag.TypeArea)"
+                   asp-route-state="@ViewBag.State"
+                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                   class="btn btn-outline-blue">
+                    Назад
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>  
+            }
     }
     @if (Model.PageViewModel.HasNextPage)
     {
-        <a asp-action="Placements"
-            asp-route-search="@ViewBag.Search"
-            asp-route-type="@(ViewBag.Type)"
-            asp-route-state="@ViewBag.State"
-            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-
-           class="btn btn-outline-blue">
-            Вперед
-            <i class="glyphicon glyphicon-chevron-right"></i>
-        </a>
-    }
+            if (ViewBag.TypeArea == 0)
+            {
+                <a asp-action="Placements"
+                   asp-route-search="@ViewBag.Search"
+                   asp-route-typeStreet="@(ViewBag.TypeStreet)"
+                   asp-route-state="@ViewBag.State"
+                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                   class="btn btn-outline-blue">
+                    Вперед
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+            else
+            {
+                <a asp-action="Placements"
+                   asp-route-search="@ViewBag.Search"
+                   asp-route-typeArea="@(ViewBag.TypeArea)"
+                   asp-route-state="@ViewBag.State"
+                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                   class="btn btn-outline-blue">
+                    Вперед
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>  
+            }
+        }
     </form>
 }
 else

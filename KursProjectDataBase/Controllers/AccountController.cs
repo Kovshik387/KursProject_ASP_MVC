@@ -84,7 +84,7 @@ namespace KursProjectDataBase.Controllers
         }
 
         [HttpGet]
-        [Authorize (Roles = "Tenant, Renter")]
+        [Authorize]
         public IActionResult Info()
         {
             int temp = int.Parse(HttpContext.User.Identity!.Name!);

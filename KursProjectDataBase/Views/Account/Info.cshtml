@@ -1,42 +1,49 @@
 ﻿@model Tuple<DataBaseModel.Entity.User,List<DataBaseModel.Entity.Authorization>,List<DataBaseModel.Entity.Contract>>
 @{
     var authorize = Model.Item2.First();
-    bool who = this.Context.User.FindFirst("role")!.Value == "Tenant";
+    string who = this.Context.User.FindFirst("role")!.Value;
     KursProjectDataBase.Helpers.HashHelper hashHelper = new();
 }
 
 <div class="col-4 gx-4">
-    <h1>Страница пользователя</h1>
-
+    @if(who != "Admin") {<h1>Страница пользователя</h1>}
+    else {<h1>Страница администратора</h1>}
     <p>Имя: @Model.Item1.Name</p>
     <p>Фамилия: @Model.Item1.Surname</p>
     <p>Пол: @Model.Item1.Sex</p>
     <p>Контактные данные: @Model.Item1.Contact</p>
     
-    @if (who)
+    @if (who == "Tenant")
     {
         <p>Роль: Съёмщик</p>
         @*<p>Рейтинг: @Model.Item1.Tenants!.First().Rating</p>*@
     }
-    else
+    @if (who == "Renter")
     {
         <p>Роль: Арендодатель</p>
         <p>Лицензия: @Model.Item1.Renters!.First().License</p>
+    }
+    @if (who == "Admin")
+    {
+        
     }
     <p>Логин: @authorize.Loginuser</p>
     <p>Пароль: @authorize.Passworduser</p>
 </div>
 
-<di>
-    <form method="post">
-        <div class="">
-            <label class="col-md-4 control-label" for="singlebutton"></label>
-            <div class="col-md-4">
-                <input type="submit" value="Изменить данные" class="btn btn-primary" />
+@if (who != "Admin")
+{
+    <di>
+        <form method="post">
+            <div class="">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <input type="submit" value="Изменить данные" class="btn btn-primary" />
+                </div>
             </div>
-        </div>
-    </form>
-</di>
+        </form>
+    </di>
+}
 
 <p style="margin-right: 0em">
 @if (Model.Item3.Count != 0)
@@ -45,7 +52,7 @@
         <table class="table">
             <thead>
                 <tr>
-                @if(who)
+                @if(who == "Tenant")
                 {
                     <th>Арендодатель</th>
                 }
@@ -61,17 +68,19 @@
             <tbody>
                 @foreach (var item in Model.Item3)
                 {
-                    if (item.IdSNavigation.IdTNavigation == null) continue;
-                <tr>
-                    @if (who)
+                    if (who != "Admin")
                     {
-                        <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Name</td>        
-                    }
-                    else
-                    {
-                        <td>@item.IdSNavigation.IdTNavigation.IdUNavigation.Name</td>
-                    }
-                    <td>@item.IdSNavigation.Description</td>
+                        if (item.IdSNavigation.IdTNavigation == null) continue;
+                        <tr>
+                            @if (who == "Tenant")
+                            {
+                                <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Name</td>
+                            }
+                            @if (who == "Renter")
+                            {
+                                <td>@item.IdSNavigation.IdTNavigation.IdUNavigation.Name</td>
+                            }
+                            <td>@item.IdSNavigation.Description</td>
                     <td>@item.IdSNavigation.Datesolution</td>
                     <td>@item.Paymentsize</td>
                     <td>
@@ -81,13 +90,17 @@
                     </td>
                 </tr>
                 }
+                }
             </tbody>
         </table>
-}
-else{
-    <h3>
-        У вас ещё нет сделок
-    </h3>
-}
+    }
+    else{
+        if (who != "Admin")
+        {
+            <h3>
+                У вас ещё нет сделок
+            </h3>
+        }
+    }
 </p>
 

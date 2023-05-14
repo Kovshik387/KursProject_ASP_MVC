@@ -83,7 +83,7 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Tenant")]
-        public IActionResult Placements(string search, SortState state, int type,int page = 1) 
+        public IActionResult Placements(string search, SortState state, int typeStreet = 0, int typeArea = 0,int page = 1) 
         {
             
             int pageSize = 8;
@@ -91,15 +91,18 @@ namespace KursProjectDataBase.Controllers
 
             ViewBag.Search = search;
             ViewBag.State = state;
-            ViewBag.Type = type;
 
-            if (search != null && (SearchType)type == SearchType.Area)
+
+            ViewBag.TypeArea = typeArea;
+            ViewBag.TypeStreet = typeStreet;
+
+            if (search != null && (SearchType)typeArea == SearchType.Area)
             {
                 source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Area == search);
             }
             else
             {
-                if ((SearchType)type == SearchType.Street && search != null) source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
+                if ((SearchType)typeStreet == SearchType.Street && search != null) source = _placementService.TenantPlacements().Where(item => item.IdPNavigation.Street == search);
                 else source = _placementService.TenantPlacements();
             }
 
