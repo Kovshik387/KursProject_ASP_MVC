@@ -27,7 +27,7 @@ namespace DataBaseModel.Configuration
 
             entity.HasOne(d => d.IdRNavigation).WithMany(p => p.Solutions)
                 .HasForeignKey(d => d.IdR)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("solution_id_r_fkey");
 
             entity.HasOne(d => d.IdTNavigation).WithMany(p => p.Solutions)

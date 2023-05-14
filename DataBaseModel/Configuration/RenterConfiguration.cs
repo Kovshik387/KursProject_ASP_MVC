@@ -27,7 +27,7 @@ namespace DataBaseModel.Configuration
 
             entity.HasOne(d => d.IdUNavigation).WithMany(p => p.Renters)
                 .HasForeignKey(d => d.IdU)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("renter_id_u_fkey");
         }
     }

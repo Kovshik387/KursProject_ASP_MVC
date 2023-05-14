@@ -1,4 +1,6 @@
 ﻿using DataBaseModel;
+using DataBaseModel.Entity;
+using KursProjectDataBase.Models;
 using KursProjectDataBase.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,29 @@ namespace KursProjectDataBase.Controllers
             ViewBag.Role = role;
             var users = _adminService.UsersGet();
             return View(_adminService.UsersGet());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UserInfo(string id, string type)
+        {
+            return View(_adminService.UserSolution(id,type));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UserDelete(string id, string type)
+        {
+            _adminService.DeleteUser(id, type);
+            return RedirectToAction("UsersList", "Admin");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UserInfo(UserModelView user)
+        {
+            _adminService.UpdateUser(user);
+            return RedirectToAction("UsersList", "Admin");
         }
     }
 }

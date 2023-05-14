@@ -1,0 +1,92 @@
+﻿@model KursProjectDataBase.Models.UserModelView
+@{
+
+}
+
+@if(Model.Type == "Renter")
+{
+    <h1>Риэлтер</h1>
+    <div>
+        <form method="post">
+            <fieldset>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="Name" class="form-control" type="text" value="@Model.Name" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="Surname" class="form-control" type="text" value="@Model.Surname" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="Contact" class="form-control" type="text" value="@Model.Contact" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="License" class="form-control" type="text" value="@Model.License" />
+                    </div>
+                </div>
+
+                <div class="">
+                    <label class="col-md-4 control-label" for="singlebutton"></label>
+                    <div class="col-md-4">
+                        <input type="submit" value="Изменить данные" class="btn btn-primary" />
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+}
+else
+{
+    <h2>Съёмщик</h2>
+    <div>
+        <form method="post" action="TenantInfo">
+            <fieldset>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="@Model.Name" class="form-control" type="text" value="@Model.Name" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="@Model.Surname" class="form-control" type="text" value="@Model.Surname" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="@Model.Contact" class="form-control" type="text" value="@Model.Contact" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input class="form-control input-md" asp-for="@Model.Rating" class="form-control" type="number" value="@Model.Rating" />
+                    </div>
+                </div>
+
+                <span hidden="hidden">
+                    <input asp-for="@Model.Id" type="number" value="@Model.Id">
+                    <input asp-for="@Model.Type" type="text" value="@("Tenant")">
+                </span>
+
+                <div class="">
+                    <label class="col-md-4 control-label" for="singlebutton"></label>
+                    <div class="col-md-4">
+                        <input type="submit" value="Изменить данные" class="btn btn-primary">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+}
