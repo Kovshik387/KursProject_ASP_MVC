@@ -96,8 +96,6 @@ namespace KursProjectDataBase.Services
 
         public void SetDeal(PlacementView view,int id)
         {
-            int id_tenant = _dataBaseModelContext.Tenants.Where(item => item.IdU == id).First().IdT;
-
             _dataBaseModelContext.Contracts.Include(c => c.IdSNavigation).Where(s => s.IdSNavigation.IdS == view.IdSolution).ExecuteUpdate(prop => prop.
                 SetProperty(item => item.IdPay, item => view.IdPay)
                 
@@ -106,9 +104,23 @@ namespace KursProjectDataBase.Services
             var date = DateOnly.Parse(DateTime.Now.ToString().Substring(0, 10));
 
             _dataBaseModelContext.Solutions.Where(id => id.IdS == view.IdSolution).ExecuteUpdate(prop => prop.
-                SetProperty(item => item.IdT, item => id_tenant).
+                SetProperty(item => item.IdT, item => _dataBaseModelContext.Tenants.Where(item => item.IdU == id).First().IdT).
                 SetProperty(item => item.Datesolution, item => date)
             );
+
+            var user = this._dataBaseModelContext.Contracts.
+                Include(s => s.IdSNavigation).
+                    ThenInclude(r => r.IdTNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(p => p.IdPNavigation).
+                    ThenInclude(p => p.IdRNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Where(id_s => id_s.IdS == view.IdSolution).First();
+
+            EmailService email = new();
+
+            email.SentRenter(user);
+            email.SentTenant(user);
         }
 
         public void Delete(int id)

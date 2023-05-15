@@ -51,19 +51,6 @@ namespace KursProjectDataBase.Services
             foreach (var item in tenant_group) tenant.Add(_dbContext.Tenants.Include(d => d.IdUNavigation).Where(id => id.IdT == item.Key).First());
             foreach (var item in renter_group) renter.Add(_dbContext.Renters.Include(d => d.IdUNavigation).Where(id => id.IdR == item.Key).First());
 
-
-/*            var tenants_s = _dbContext.Solutions.Include(t => t.IdTNavigation).ThenInclude(u => u.IdUNavigation).Where(s => s.IdTNavigation != null);
-            var renters_s = _dbContext.Solutions.Include(t => t.IdRNavigation).ThenInclude(u => u.IdUNavigation).Where(s => s.IdT != null);
-
-            List<Tenant> tenants = new();
-            List<Renter> renters = new();
-
-            foreach (var item in tenants_s) tenants.Add(item.IdTNavigation);
-            foreach (var item in renters_s) renters.Add(item.IdRNavigation);
-
-            tenants = tenants.Count() >= count ? tenants : new();
-            renters = renters.Count() >= count ? renters : new();*/
-
             return new(tenant, renter);
         }
 
@@ -195,8 +182,7 @@ namespace KursProjectDataBase.Services
                     SetProperty(p3 => p3.Contact, p3 => user.Contact)
                 );
                 EmailService emailService = new EmailService();
-                emailService.To_Message = user_update.First().Contact;
-                emailService.MessageSend();
+                emailService.ChangeData(user_update.First().Contact!);
             }
             else
             {
@@ -211,8 +197,7 @@ namespace KursProjectDataBase.Services
                     SetProperty(p3 => p3.Contact, p3 => user.Contact)
                 );
                 EmailService emailService = new EmailService();
-                emailService.To_Message = user_update.First().Contact;
-                emailService.MessageSend();
+                emailService.ChangeData(user_update.First().Contact!);
             }
         }
     }
