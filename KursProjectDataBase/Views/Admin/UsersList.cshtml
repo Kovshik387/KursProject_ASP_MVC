@@ -7,19 +7,25 @@
 
 <form asp-action="UsersList" method="get">
 
-    <div class="btn-group">
-        <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role" value="@(ViewBag.Role = "Renter")" onclick="@(ViewBag.Role = "Renter")">
-            Арендодатели
-        </button>
-        <div class="m-md-1"></div>
-        <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role" value="@(ViewBag.Role = "Tenant")" onclick="@(ViewBag.Role = "Tenant")">
-            Съёмщики
-        </button>
-        <h3>|</h3>
+    <div class="w-auto">
+        <div class="btn-group">
+            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role" value="@(ViewBag.Role = "Renter")" onclick="@(ViewBag.Role = "Renter")">
+                Арендодатели
+            </button>
+            <div class="m-md-1"></div>
+            <button type="submit" class="dropdown-item rounded-2" rounded-2" name="role" value="@(ViewBag.Role = "Tenant")" onclick="@(ViewBag.Role = "Tenant")">
+                Съёмщики
+            </button>
+            <h3>|</h3>
+        </div>
+        @view
+        <input type="number" min="1" max="20" class="form-control w-25" name="count" value="@ViewBag.Count" onclick="@(ViewBag.Role = roles)" placeholder="Количество контрактов"></>
+        <div class="btn-group">
+            <input type="text" class="form-control h-50 w-100" name="email" value="@ViewBag.Email" placeholder="Email"/>
+            <button type="submit" class="dropdown-item rounded-2 h-25" name="email" value="@ViewBag.Email">Отправить</button>
+        </div>
     </div>
-    @view
-    <input type="number" min="1" max="20" class="form-control w-25" name="count" value="@ViewBag.Count" onclick="@(ViewBag.Role = roles)" placeholder="Количество контрактов"></>
-    
+
 
 <table class="table">
     <thead>
