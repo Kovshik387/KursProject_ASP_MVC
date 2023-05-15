@@ -1,0 +1,43 @@
+﻿@model KursProjectDataBase.Models.ReportViewModel
+
+<div>
+    <fieldset>
+        <div class="form-group">
+            <div class="col-md-4">
+                Заключено контрактов: 
+                <input class="form-control input-md" class="form-text" type="text" value="@Model.CountContracts" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                Денежная сумма контрактов:
+                <input class="form-control input-md" class="form-text" type="text" value="@Model.SumContracts" readonly="readonly" />
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Фамилия Арендодателя</th>
+                    <th scope="auto">Фамилия Съёмщика</th>
+                    <th>Тип помещения</th>
+                    <th>Оплата</th>
+                    <th>Дата контракта</th>
+                </tr>
+            </thead>
+        <tbody>
+            @foreach (var item in Model.Contracts!)
+            {
+                <tr>
+                    <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Surname</td>
+                    <td>@item.IdSNavigation.IdTNavigation.IdUNavigation.Surname</td>
+                    <td>@(item.IdPNavigation.IdType == 1 ? "Квартира" : "Дом")</td>
+                    <td>@item.Paymentsize</td>
+                    <td>@item.IdSNavigation.Datesolution</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+
+    </fieldset>
+</div>

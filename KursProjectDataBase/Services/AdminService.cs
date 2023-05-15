@@ -5,6 +5,7 @@ using KursProjectDataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace KursProjectDataBase.Services
@@ -30,6 +31,40 @@ namespace KursProjectDataBase.Services
             var tenants = _dbContext.Tenants.Include(u => u.IdUNavigation).ToList();
             var renters = _dbContext.Renters.Include(u0 => u0.IdUNavigation).ToList();
             return new(tenants, renters);
+        }
+
+        public Tuple<List<Tenant>, List<Renter>> UsersGetCount(int count)
+        {
+            var null_check = _dbContext.Solutions.Where(id => id.IdT != null);
+            var tenant_group = null_check.GroupBy(p => p.IdT)
+                .Select(g => new { name = g.Key, count_ = g.Count() }).Where(n => n.count_ >= count)
+                .ToDictionary(d => d.name, c => c.count_);
+
+
+            var renter_group = _dbContext.Solutions.Where (id => id.IdT != null).
+                GroupBy(p => p.IdR).
+                Select(g => new { name = g.Key, count_ = g.Count() }).Where(n => n.count_ >= count).
+                ToDictionary(d => d.name, c => c.count_);
+
+            List<Tenant> tenant = new();
+            List<Renter> renter = new();
+            foreach (var item in tenant_group) tenant.Add(_dbContext.Tenants.Include(d => d.IdUNavigation).Where(id => id.IdT == item.Key).First());
+            foreach (var item in renter_group) renter.Add(_dbContext.Renters.Include(d => d.IdUNavigation).Where(id => id.IdR == item.Key).First());
+
+
+/*            var tenants_s = _dbContext.Solutions.Include(t => t.IdTNavigation).ThenInclude(u => u.IdUNavigation).Where(s => s.IdTNavigation != null);
+            var renters_s = _dbContext.Solutions.Include(t => t.IdRNavigation).ThenInclude(u => u.IdUNavigation).Where(s => s.IdT != null);
+
+            List<Tenant> tenants = new();
+            List<Renter> renters = new();
+
+            foreach (var item in tenants_s) tenants.Add(item.IdTNavigation);
+            foreach (var item in renters_s) renters.Add(item.IdRNavigation);
+
+            tenants = tenants.Count() >= count ? tenants : new();
+            renters = renters.Count() >= count ? renters : new();*/
+
+            return new(tenant, renter);
         }
 
         public UserModelView UserSolution(string id, string type)
@@ -94,6 +129,55 @@ namespace KursProjectDataBase.Services
             }
         }
 
+        public IQueryable<Contract> GetReportThisMonth(DateOnly date)
+        {
+            DateOnly next_month = new DateOnly(date.Year,date.Month,28);
+            DateOnly this_month = new DateOnly(date.Year, date.Month,1);
+            var report_month = _dbContext.Contracts.
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdTNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdRNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(p => p.IdPNavigation).
+                Where(p => this_month <= p.IdSNavigation.Datesolution 
+                && p.IdSNavigation.Datesolution <= next_month);
+
+            return report_month;
+        }
+
+        public IQueryable<Contract> GetReportTime(DateOnly? first,DateOnly? last) 
+        {
+
+            var report_month = _dbContext.Contracts.
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdTNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdRNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(p => p.IdPNavigation).
+                Where(p => first <= p.IdSNavigation.Datesolution
+                && p.IdSNavigation.Datesolution <= last);
+
+            return report_month;
+        }
+
+        public IQueryable<Contract> GetReport()
+        {
+            return _dbContext.Contracts.
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdTNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(s => s.IdSNavigation).
+                    ThenInclude(t => t.IdRNavigation).
+                    ThenInclude(u => u.IdUNavigation).
+                Include(p => p.IdPNavigation).Where(s => s.IdSNavigation.IdTNavigation != null);
+        }
+
+
+
         public void UpdateUser(UserModelView user)
         {
             Console.WriteLine(user.Id);
@@ -102,6 +186,7 @@ namespace KursProjectDataBase.Services
                 _dbContext.Renters.
                     Where(id => id.IdU == user.Id).ExecuteUpdate(prop => prop.
                         SetProperty(p1 => p1.License, p1 => user.License)
+
                 );
                 var user_update = _dbContext.Users.Where(u => u.IdU == user.Id);
                 user_update.ExecuteUpdate(prop => prop.

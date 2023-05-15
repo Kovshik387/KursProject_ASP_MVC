@@ -24,11 +24,13 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult UsersList(string role = "Tenant")
+        public IActionResult UsersList(string role = "Tenant", int count = 0)
         {
             ViewBag.Role = role;
-            var users = _adminService.UsersGet();
-            return View(_adminService.UsersGet());
+            Tuple<List<Tenant>, List<Renter>> users;
+            if (count > 1) users = _adminService.UsersGetCount(count);
+            else users = _adminService.UsersGet();
+            return View(users);
         }
 
         [HttpGet]
@@ -52,6 +54,53 @@ namespace KursProjectDataBase.Controllers
         {
             _adminService.UpdateUser(user);
             return RedirectToAction("UsersList", "Admin");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ReportList(string first, string last)
+        {
+            var result = _adminService.GetReport();
+            ReportViewModel reportViewModel = new ReportViewModel()
+            {
+                Contracts = result,
+                CountContracts = result.Count(),
+                SumContracts = result.Sum(s => s.Paymentsize),
+            };
+
+            return View(reportViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ReportList(ReportViewModel view)
+        {
+            if (view.FirstDate == null || view.LastDate == null) return RedirectToAction("ReportList");
+
+            IQueryable<Contract> result = _adminService.GetReportTime(DateOnly.Parse(view.FirstDate), DateOnly.Parse(view.LastDate));
+            ReportViewModel reportViewModel = new ReportViewModel()
+            {
+                Contracts = result,
+                CountContracts = result.Count(),
+                SumContracts = result.Sum(s => s.Paymentsize),
+            };
+
+            return View(reportViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Report()
+        {
+            var result = _adminService.GetReportThisMonth(date: DateOnly.FromDateTime(DateTime.Now));
+            ReportViewModel reportViewModel = new ReportViewModel()
+            {
+                Contracts = result,
+                CountContracts = result.Count(),
+                SumContracts = result.Sum(s => s.Paymentsize),
+            };
+
+            return View(reportViewModel);
         }
     }
 }

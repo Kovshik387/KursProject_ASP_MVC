@@ -1,0 +1,88 @@
+﻿@model KursProjectDataBase.Models.ReportViewModel
+<form asp-action="ReportList" method="post">
+<div class="form-group">
+
+        <div class="btn-group">
+                <div class="col-md-4">
+                    Заключено контрактов:
+                    <input class="form-control input-md" type="text" value="@Model.CountContracts" readonly="readonly" />
+                </div>
+                <div class="m-md-1"></div>
+                <div class="col-md-4">
+                    Денежная сумма контрактов:
+                    <input class="form-control input-md" type="text" value="@Model.SumContracts" readonly="readonly" />
+                </div>
+                <div class="m-md-1"></div>
+                <div class="col-md-4">
+                    Дата 1
+                    @Html.TextBoxFor(model => model.FirstDate, new {@class = "form-control", @type="date",@placeholder ="dd.mm.yyyy"})
+                </div>
+                <div class="col-md-4">
+                    Дата 2
+                    @Html.TextBoxFor(model => model.LastDate, new {@class = "form-control", @type="date",@placeholder ="dd.mm.yyyy"})
+                </div>
+                <div class="m-md-1"></div>
+                <div class="row-cols-md-0 w-100">
+                    <a input="submit" asp-action="ReportList"><i class="bi bi-x-lg"></i></a>
+                <input type="submit" class="btn btn-primary" value="Поиск" />
+                </div>
+
+        </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Фамилия Арендодателя</th>
+            <th scope="auto">Фамилия Съёмщика</th>
+            <th>Тип помещения</th>
+            <th>Оплата</th>
+            <th>Дата контракта</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Contracts!)
+        {
+            <tr>
+                <td>@item.IdSNavigation.IdRNavigation.IdUNavigation.Surname</td>
+                <td>@item.IdSNavigation.IdTNavigation.IdUNavigation.Surname</td>
+                <td>@(item.IdPNavigation.IdType == 1 ? "Квартира" : "Дом")</td>
+                <td>@item.Paymentsize</td>
+                <td>@item.IdSNavigation.Datesolution</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+</form>
+<link href="~/lib/jqueryui/themes/redmond/jquery-ui.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        $(function () 
+        {
+            $(".mydatepicker")
+                .wrap('<div class="input-group">')
+                .datepicker({
+                    dateFormat: "dd.mm.yy",
+                    changeYear: true,
+                    yearRange: "-70:+0",//year selection is possible from starting 70 years before now
+                    showOn: "both"
+                })
+                .next("button").button({
+                    icons: { primary: "ui-icon-calendar" },
+                    label: "Select Date",
+                    text: false
+                })
+                .addClass("btn btn-default")
+                .wrap('<span class="input-group-btn">')
+                .find('.ui-button-text')
+                .css({
+                    'visibility': 'hidden',
+                    'display': 'inline'
+                });
+        });
+    </script>
+}
+                       
+       

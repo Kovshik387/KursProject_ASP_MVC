@@ -64,7 +64,14 @@
 
                 </th>
                 <th>
-                        @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, type = ViewBag.Type, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                    @if (ViewBag.TypeArea == 1)
+                    {
+                            @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, typeArea = type_area, state = KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                    }
+                    else
+                    {
+                            @Html.ActionLink("Сбросить","Placements", new {search = ViewBag.Search, typeStreet = type_street, state = KursProjectDataBase.Models.IndexViewModel.SortState.None })
+                    }
                 </th>
             </tr>
         </thead>

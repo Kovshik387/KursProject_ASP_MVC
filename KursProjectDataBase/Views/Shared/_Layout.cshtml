@@ -38,8 +38,10 @@
                                     case "Tenant":
                                         <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Placement" asp-action="Placements">Объявления</a></li>
                                         break;
-                                    default:
-                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="UsersList">Объявления</a></li>
+                                    default: 
+                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="UsersList">Пользователи</a></li>
+                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Report">Сводка по текущему месяцу</a></li>
+                                    <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ReportList">Сводка</a></li>
                                         break;
                                 }
                                 <li class="nav-item">
@@ -48,13 +50,14 @@
                                     </div>
                                 </li>
                                 
-                            }else {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Авторизация</a>
-                            </li>
+                            }else 
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Авторизация</a>
+                                </li>
                             }
 
                     </ul>

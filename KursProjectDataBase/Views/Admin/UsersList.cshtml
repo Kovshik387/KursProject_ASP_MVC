@@ -17,10 +17,12 @@
         </button>
         <h3>|</h3>
     </div>
+    @view
+    <input type="number" min="1" max="20" class="form-control w-25" name="count" value="@ViewBag.Count" onclick="@(ViewBag.Role = roles)" placeholder="Количество контрактов"></>
+    
 
 <table class="table">
     <thead>
-        <h>@view</h>
         <tr>
             <th>ID</th>
             <th scope="auto">Имя</th>
