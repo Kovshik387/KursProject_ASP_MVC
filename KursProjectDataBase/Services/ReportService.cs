@@ -1,17 +1,18 @@
 ﻿namespace KursProjectDataBase.Services
 {
+    using DataBaseModel;
     using DataBaseModel.Entity;
     using OfficeOpenXml;
     public interface IDocumentContract : System.IDisposable
     {
-        public abstract Task<byte[]> GetDocument(List<Contract> data);
+        public abstract Task<byte[]> GetDocument(List<Contract> data, List<Tenant> tenant, List<Renter> renter);
     }
     public class ReportService : IDocumentContract
     {
         protected ILogger<ReportService> Logger { get; set; } = default!;
         public void Dispose() => this.Logger.LogInformation("report Disposed");
         
-        public async Task<byte[]> GetDocument(List<Contract> data)
+        public async Task<byte[]> GetDocument(List<Contract> data, List<Tenant> tenant, List<Renter> renter)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var excelDocument = new ExcelPackage();
@@ -27,10 +28,9 @@
 
             workSheet.Row(1).Style.Font.Bold = true; workSheet.Row(1).Height = 20;
 
-            
-            for (var index = 0; index < data.Count; index++)
+            for (var index = 0; index < tenant.Count; index++)
             {
-                var formated = data[index].IdSNavigation.IdTNavigation.IdUNavigation;
+                var formated = tenant[index].IdUNavigation;
                 workSheet.Cells[index + 2, 1].Value = formated.Name;
                 workSheet.Cells[index + 2, 2].Value = formated.Surname;
                 workSheet.Cells[index + 2, 3].Value = formated.Contact;
@@ -51,9 +51,9 @@
             workSheetRenter.Row(1).Style.Font.Bold = true; workSheetRenter.Row(1).Height = 20;
 
 
-            for (var index = 0; index < data.Count; index++)
+            for (var index = 0; index < renter.Count; index++)
             {
-                var formated = data[index].IdSNavigation.IdRNavigation.IdUNavigation;
+                var formated = renter[index].IdUNavigation;
                 workSheetRenter.Cells[index + 2, 1].Value = formated.Name;
                 workSheetRenter.Cells[index + 2, 2].Value = formated.Surname;
                 workSheetRenter.Cells[index + 2, 3].Value = formated.Contact;

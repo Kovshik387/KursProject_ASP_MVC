@@ -78,7 +78,8 @@ namespace KursProjectDataBase.Controllers
             if (view.Email != null)
             {
                 EmailService emailService = new EmailService();
-                await emailService.SentReportAsync(_adminService.GetReport().ToList(), view.Email);
+                var users = _adminService.UsersGet();
+                await emailService.SentReportAsync(_adminService.GetReport().ToList(),users.Item1.ToList(),users.Item2.ToList(), view.Email);
             }
 
             if (view.FirstDate == null || view.LastDate == null) return RedirectToAction("ReportList");

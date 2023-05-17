@@ -7,7 +7,7 @@ namespace KursProjectDataBase.Services
 {
     public class EmailService
     {
-        public async Task SentReportAsync(List<Contract> data, string email)
+        public async Task SentReportAsync(List<Contract> data, List<Tenant> tenant, List<Renter> renter, string email)
         {
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
             smtpClient.Credentials = new NetworkCredential("kursprojecttask5fantokin@gmail.com", "qqpytrfmzcjpaycn");
@@ -21,7 +21,7 @@ namespace KursProjectDataBase.Services
             FileStream objFileStream = File.Create(path);
             objFileStream.Close();
 
-            File.WriteAllBytes(path, await reportService.GetDocument(data));
+            File.WriteAllBytes(path, await reportService.GetDocument(data,tenant,renter));
             
             Attachment bag = new Attachment(path, MediaTypeNames.Application.Octet);
 
