@@ -58,7 +58,7 @@ namespace KursProjectDataBase.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult ReportList(string first, string last)
+        public IActionResult ReportListAsync(string first, string last)
         {
             var result = _adminService.GetReport();
             ReportViewModel reportViewModel = new ReportViewModel()
@@ -73,8 +73,14 @@ namespace KursProjectDataBase.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult ReportList(ReportViewModel view)
+        public async Task<IActionResult> ReportListAsync(ReportViewModel view)
         {
+            if (view.Email != null)
+            {
+                EmailService emailService = new EmailService();
+                await emailService.SentReportAsync(_adminService.GetReport().ToList(), view.Email);
+            }
+
             if (view.FirstDate == null || view.LastDate == null) return RedirectToAction("ReportList");
 
             IQueryable<Contract> result = _adminService.GetReportTime(DateOnly.Parse(view.FirstDate), DateOnly.Parse(view.LastDate));

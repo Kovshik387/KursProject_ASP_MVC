@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="6.2.4" />
     <PackageReference Include="jQuery.UI" Version="1.12.1.1" />
     <PackageReference Include="jQuery.UI.Combined" Version="1.13.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
@@ -51,6 +52,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Services\TemporalData\" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,46 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using DataBaseModel.Entity;
+using System.Net.Mime;
 
 namespace KursProjectDataBase.Services
 {
     public class EmailService
     {
+        public async Task SentReportAsync(List<Contract> data, string email)
+        {
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.Credentials = new NetworkCredential("kursprojecttask5fantokin@gmail.com", "qqpytrfmzcjpaycn");
+            smtpClient.EnableSsl = true;
+
+            ReportService reportService = new ReportService();
+            string path = "C:\\Users\\Yrulewet\\source\\repos\\LearcnCS\\DataBaseProject\\KursProjectDataBase\\KursProjectDataBase\\Services\\TemporalData\\report.xlsx";
+            
+            if (File.Exists(path)) File.Delete(path);
+
+            FileStream objFileStream = File.Create(path);
+            objFileStream.Close();
+
+            File.WriteAllBytes(path, await reportService.GetDocument(data));
+            
+            Attachment bag = new Attachment(path, MediaTypeNames.Application.Octet);
+
+            MailAddress from = new MailAddress("kursprojecttask5fantokin@gmail.com", "Отчёт");
+            MailAddress to = new MailAddress(email);
+
+            MailMessage message = new MailMessage(from, to)
+            {
+                Subject = "Fantokin placements",
+                Body = "Отчётные данные",
+            };
+
+            message.Attachments.Add(bag);
+
+            smtpClient.Send(message);
+            message.Attachments.Dispose();
+
+        }
+
         public void SentTenant(Contract tenant) 
         {
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);

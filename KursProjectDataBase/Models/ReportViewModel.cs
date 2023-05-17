@@ -10,6 +10,7 @@ namespace KursProjectDataBase.Models
         public string FirstDate { get; set; }
         public string LastDate { get; set; }
 
+        public string Email { get; set; }
         public IQueryable<Contract> Contracts { get; set; }
     }
 }

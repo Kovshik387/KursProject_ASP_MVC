@@ -1,7 +1,31 @@
 ﻿@model KursProjectDataBase.Models.ReportViewModel
 <form asp-action="ReportList" method="post">
-<div class="form-group">
 
+<div class="btn-toolbar">
+    <div class="btn-group">
+@*        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.Email, new {@class = "form control",@type="text",@placeholder="Отправить отчёт"})
+        </div>
+*@
+        <div class="input-group">
+            
+            @*<input class="form-control border-end-0 border rounded-pill" type="search" value="email">*@
+                @Html.TextBoxFor(model => model.Email, new {@class = "form-control border-end-0 border rounded-pill",@type="search",@placeholder="Отправить отчёт"})
+            <span class="input-group-append">
+                <button class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5" type="submit">
+                    <i class="bi bi-send"></i>
+                </button>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+
+@*    @Html.ActionLink("Стоимость","Placements", new {search = ViewBag.Search, typeStreet = type_street, state =  ViewBag.State == KursProjectDataBase.Models.IndexViewModel.SortState.Asc ? KursProjectDataBase.Models.IndexViewModel.SortState.Desc
+    : KursProjectDataBase.Models.IndexViewModel.SortState.Asc})*@
+
+<div class="form-group">
         <div class="btn-group">
                 <div class="col-md-4">
                     Заключено контрактов:
